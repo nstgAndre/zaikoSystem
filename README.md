@@ -28,4 +28,8 @@ php artisan key generate
 ```
 php artisan migrate
 ```
+8. laravelの表示を確認
+```
+http://localhost:8000/
+```
 
