@@ -16,4 +16,16 @@ cd src
 ```
 cp .env.example .env
 ```
+5. composerのインストール
+```
+composer install
+```
+6. keyの生成
+```
+php artisan key generate
+```
+7.DB側にテーブルを作成する
+```
+php artisan migrate
+```
 
