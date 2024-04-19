@@ -1,0 +1,17 @@
+# ベースイメージの指定
+FROM node:latest
+
+# 作業ディレクトリの設定
+WORKDIR /usr/src/app
+
+# package.json と package-lock.json をコピー
+COPY package*.json ./
+
+# 依存関係のインストール
+RUN npm install
+
+# アプリケーションのソースをコピー
+COPY . .
+
+# アプリケーションの起動
+CMD ["npm", "start"]

@@ -29,7 +29,6 @@ services:
       - 5432:5432
     volumes:
       - postgres:/var/lib/postgresql/data
-
   pgadmin:
     image: dpage/pgadmin4
     restart: always
@@ -42,6 +41,18 @@ services:
       - pgadmin:/var/lib/pgadmin
     depends_on:
       - postgres
+  react-app:
+    build:
+      context: ./my-react-app
+      dockerfile: ../docker/react/dockerfile
+    volumes:
+      - ./my-react-app:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm start
+    ports:
+      - "3000:3000"
+    depends_on:
+      - app
 
 volumes:
   postgres:
