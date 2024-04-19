@@ -32,4 +32,14 @@ php artisan migrate
 ```
 http://localhost:8000/
 ```
+9. reactの表示確認
+```
+http://localhost:3000/
+```
+my-react-app/package.jsonファイルでホットリロード有効化
+以下のように編集
+```
+"start": "WATCHPACK_POLLING=true react-scripts start",
+```
+
 
