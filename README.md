@@ -36,7 +36,7 @@ http://localhost:8000/
 ```
 http://localhost:3000/
 ```
-my-react-app/package.jsonファイルでホットリロード有効化
+my-react-app/package.jsonファイルでホットリロード有効化(もうなってる可能性ある)
 以下のように編集
 ```
 "start": "WATCHPACK_POLLING=true react-scripts start",
