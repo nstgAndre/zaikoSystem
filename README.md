@@ -8,3 +8,12 @@ https://github.com/nstgAndre/zaikoSystem
 ```
 docker-compose exec app bash
 ```
+3. srcディレクトリ移動
+```
+cd src
+```
+4. .envファイル生成
+```
+cp .env.example .env
+```
+
