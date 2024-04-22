@@ -4,8 +4,9 @@
 ```
 https://github.com/nstgAndre/zaikoSystem
 ```
-2. laravelのコンテナ内に入る
+2. コンテナビルド＆laravelのappコンテナ内に入る
 ```
+docker-compose up --build
 docker-compose exec app bash
 ```
 3. srcディレクトリ移動
