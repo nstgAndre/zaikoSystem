@@ -33,14 +33,20 @@ php artisan migrate
 ```
 http://localhost:8000/
 ```
-9. reactの表示確認
+9. npm run devで起動
+  VITE v5.2.10  ready in 513 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: http://172.26.0.3:5173/
+  ➜  press h + enter to show help
+
+  LARAVEL v10.48.9  plugin v1.0.2
+この表記がでる
+10.laravelとreactの連携を確認
 ```
-http://localhost:3000/
+http://localhost:8000/test
 ```
-my-react-app/package.jsonファイルでホットリロード有効化(もうなってる可能性ある)
-以下のように編集
-```
-"start": "WATCHPACK_POLLING=true react-scripts start",
-```
+
+
 
 
