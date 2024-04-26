@@ -42,6 +42,7 @@ http://localhost:8000/
 
   LARAVEL v10.48.9  plugin v1.0.2
 この表記がでる
+
 10.laravelとreactの連携を確認
 ```
 http://localhost:8000/test
