@@ -16,8 +16,7 @@ use Inertia\Inertia;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/test', [TestController::class, 'index']);
+Route::get('/test', [TestController::class, 'index']); // テスト連携用
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
