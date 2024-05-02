@@ -12,11 +12,16 @@ export default {
 
     theme: {
         extend: {
+            colors: {
+                deepblue: '#02032C',
+                lightblue: '#69d8f0',
+            },
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
-            },
+            },  
         },
     },
-
     plugins: [forms],
 };
+
+
