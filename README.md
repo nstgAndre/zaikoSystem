@@ -23,6 +23,8 @@ composer install
 または
 conposer update
 
+npm update
+
 ```
 6. keyの生成
 ```
@@ -61,4 +63,3 @@ DB_USERNAME=user
 DB_PASSWORD=password
 
 ```
-
