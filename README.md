@@ -20,10 +20,13 @@ cp .env.example .env
 5. composerのインストール
 ```
 composer install
+または
+conposer update
+
 ```
 6. keyの生成
 ```
-php artisan key generate
+php artisan key:generate
 ```
 7.DB側にテーブルを作成する
 ```
@@ -48,6 +51,14 @@ http://localhost:8000/
 http://localhost:8000/test
 ```
 
+11..envファイル
+```
+DB_CONNECTION=pgsql
+DB_HOST=postgres
+DB_PORT=5432
+DB_DATABASE=sample
+DB_USERNAME=user
+DB_PASSWORD=password
 
-
+```
 
