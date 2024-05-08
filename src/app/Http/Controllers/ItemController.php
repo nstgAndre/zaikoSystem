@@ -23,7 +23,9 @@ class ItemController extends Controller
      */
     public function create()
     {
-        return view('createTest');
+        $items = []; 
+        return response()->json(['items' => $items]);
+        // return view('createTest');
     }
 
     /**
@@ -59,7 +61,8 @@ class ItemController extends Controller
         $user = Auth::user()->name;
         $productName = $validatedData['productName'];
         $message = "$user さんが $productName を登録しました。";
-        return redirect()->route('dashboard')->with('success', $message);
+        // return redirect()->route('dashboard')->with('success', $message);
+        return response()->json(['success' => $message]);
     }
 
     /**
