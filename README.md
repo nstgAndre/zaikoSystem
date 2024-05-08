@@ -63,7 +63,3 @@ DB_USERNAME=user
 DB_PASSWORD=password
 
 ```
-=======
-
-
-
