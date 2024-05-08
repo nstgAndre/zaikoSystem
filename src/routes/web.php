@@ -21,7 +21,7 @@ use Inertia\Inertia;
 Route::get('/test', [TestController::class, 'index']); // テスト連携用
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
+    return Inertia::render('Auth/Login', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
