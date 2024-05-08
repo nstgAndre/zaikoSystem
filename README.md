@@ -20,7 +20,7 @@ cp .env.example .env
 5. composerのインストール
 ```
 composer install
-<<<<<<< HEAD
+
 ```
 6. keyの生成
 ```
@@ -59,11 +59,6 @@ http://localhost:8000/
 ```
 http://localhost:8000/test
 ```
-
-<<<<<<< HEAD
-
-
-
 =======
 11..envファイル
 ```
@@ -75,4 +70,4 @@ DB_USERNAME=user
 DB_PASSWORD=password
 
 ```
->>>>>>> origin/main
+
