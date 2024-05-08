@@ -1,5 +1,8 @@
 version: '3'
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/main
 services:
   web:
     image: nginx:1.15.6
@@ -31,6 +34,7 @@ services:
       - 5432:5432
     volumes:
       - postgres:/var/lib/postgresql/data
+<<<<<<< HEAD
   pgadmin:
     image: dpage/pgadmin4
     restart: always
@@ -44,6 +48,9 @@ services:
     depends_on:
       - postgres
 
+=======
+  
+>>>>>>> origin/main
 volumes:
   postgres:
   pgadmin:

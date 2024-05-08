@@ -2,6 +2,12 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TestController;
+
+#2
+use App\Http\Controllers\ItemController;
+
+
+
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -19,7 +25,7 @@ use Inertia\Inertia;
 Route::get('/test', [TestController::class, 'index']); // テスト連携用
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
+    return Inertia::render('Auth/Login', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
@@ -38,3 +44,8 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+#2
+Route::get('/items', [ItemController::class, 'index']);
+// Route::get('/items/create', [ItemController::class, 'create'])->name('items.create');
+// Route::post('/items', [ItemController::class, 'store'])->name('items.store');
