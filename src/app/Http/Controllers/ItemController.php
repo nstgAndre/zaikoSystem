@@ -12,9 +12,8 @@ class ItemController extends Controller
     public function index()
     {
         $items = Item::all();
-        $list = $items;
-        return view('DeliverRegister',['list' => $list]);
-		// return response()->json(['items' => $items]);
+        // $list = $items;
+		return response()->json(['items' => $items]);
     }
 
     /**
