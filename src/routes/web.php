@@ -2,6 +2,12 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TestController;
+
+#2
+use App\Http\Controllers\ItemController;
+
+
+
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -38,3 +44,8 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+#2
+Route::get('/items', [ItemController::class, 'index']);
+// Route::get('/items/create', [ItemController::class, 'create'])->name('items.create');
+// Route::post('/items', [ItemController::class, 'store'])->name('items.store');
