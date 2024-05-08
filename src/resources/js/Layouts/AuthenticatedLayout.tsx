@@ -25,6 +25,12 @@ export default function Authenticated({ user, header, children }: PropsWithChild
                                 <NavLink href={route('index')} active={route().current('index')}>
                                     在庫一覧
                                 </NavLink>
+                                <NavLink href={route('index')} active={route().current('index')}>
+                                    入庫登録
+                                </NavLink>
+                                <NavLink href={route('index')} active={route().current('index')}>
+                                    出庫登録
+                                </NavLink>
                             </div>
                         </div>
 

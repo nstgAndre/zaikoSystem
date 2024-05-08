@@ -1,26 +1,29 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import { PageProps } from '@/types';
-import React from 'react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 interface InventoryItem {
     id: number;
-    name: string;
-    model: string;
-    status: string;
-    quantity: number;
-    minQuantity: number;
-    currentQuantity: number;
-    responsible: string;
+    productName: string;
+    modelNumber: string;
+    location: string;
+    inItem: number;
+    outItem: number;
+    inventoryItem: number;
+    remarks: string;
 }
 
-const itemData: InventoryItem[] = [
-    { id: 1, name: "サーバー", model: "DL360", status: "稼働中", quantity: 100, minQuantity: 20, currentQuantity: 77, responsible: "OOさん" },
-    { id: 2, name: "ルーター", model: "DL360", status: "沈黙", quantity: 76, minQuantity: 10, currentQuantity: 73, responsible: "OOさん" },
-    // 他のアイテム...
-];
-
 export default function InventoryDashboard({ auth }: PageProps) {
+    const [items, setItems] = useState<InventoryItem[]>([]);
+    useEffect(() => {
+        axios.get('/api/items')
+            .then(response => {
+                setItems(response.data.items);
+            })
+            .catch(error => console.error('Error fetching items:', error));
+    }, []);
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -36,33 +39,33 @@ export default function InventoryDashboard({ auth }: PageProps) {
                                     <th>No</th>
                                     <th>商品名</th>
                                     <th>型番</th>
-                                    <th>状態</th>
-                                    <th>総量</th>
-                                    <th>最小量</th>
-                                    <th>現在量</th>
-                                    <th>担当者</th>
+                                    <th>納品場所</th>
+                                    <th>入庫数量</th>
+                                    <th>出庫数量</th>
+                                    <th>在庫数量</th>
+                                    <th>備考</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {itemData.map(item => (
+                                {items.map(item => (
                                     <tr key={item.id}>
-                                        <td>{item.id}</td>
-                                        <td>{item.name}</td>
-                                        <td>{item.model}</td>
-                                        <td>{item.status}</td>
-                                        <td>{item.quantity}</td>
-                                        <td>{item.minQuantity}</td>
-                                        <td>{item.currentQuantity}</td>
-                                        <td>{item.responsible}</td>
+                                        <td className="text-center">{item.id}</td>
+                                        <td className="text-center">{item.productName}</td>
+                                        <td className="text-center">{item.modelNumber}</td>
+                                        <td className="text-center">{item.location}</td>
+                                        <td className="text-center">{item.inItem}</td>
+                                        <td className="text-center">{item.outItem}</td>
+                                        <td className="text-center">{item.inventoryItem}</td>
+                                        <td className="text-center">{item.remarks}</td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
-                        <div className="p-6 text-gray-900">
+                    </div>
+                    <div className="p-6 text-gray-900">
                             リアルタイム通知履歴
                             {/* 多分履歴表示場所 */}
                             <div>2024/4/1 18:00:45 --- 何某が5個の商品を登録しました。</div>
-                        </div>
                     </div>
                 </div>
             </div>
