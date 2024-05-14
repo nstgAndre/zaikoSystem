@@ -50,7 +50,14 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
-// 2
+
+#2　変更します。
 Route::get('/items', [ItemController::class, 'index']);
 // Route::get('/items/create', [ItemController::class, 'create'])->name('items.create');
 // Route::post('/items', [ItemController::class, 'store'])->name('items.store');
+
+#3 変更します。
+Route::get('/items/createTest', [ItemController::class, 'create'])->name('items.createTest');
+Route::post('/items', [ItemController::class, 'store'])->name('items.store');
+
+

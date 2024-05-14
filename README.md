@@ -21,7 +21,7 @@ cp .env.example .env
 ```
 composer install
 または
-conposer update
+composer update
 
 npm update
 
@@ -29,6 +29,7 @@ npm update
 6. keyの生成
 ```
 php artisan key:generate
+
 ```
 7.DB側にテーブルを作成する
 ```
@@ -52,7 +53,6 @@ http://localhost:8000/
 ```
 http://localhost:8000/test
 ```
-
 11..envファイル
 ```
 DB_CONNECTION=pgsql
