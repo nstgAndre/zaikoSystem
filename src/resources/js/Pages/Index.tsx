@@ -41,7 +41,8 @@ export default function InventoryDashboard({ auth }: PageProps) {
     };
 
     const normalizeSearchString = (str: string) => {
-        if (!str) return "";
+
+        if (!str) return ""; 
         return str.normalize("NFC").toUpperCase()
             .replace(/[ぁ-ん]/g, s => String.fromCharCode(s.charCodeAt(0) + 0x60))
             .replace(/[Ａ-Ｚａ-ｚ０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
