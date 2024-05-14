@@ -3,6 +3,8 @@ import { Head } from '@inertiajs/react';
 import { PageProps } from '@/types';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import React from 'react';
+
 
 interface InventoryItem {
     id: number;
@@ -17,56 +19,90 @@ interface InventoryItem {
 
 export default function InventoryDashboard({ auth }: PageProps) {
     const [items, setItems] = useState<InventoryItem[]>([]);
+    const [filteredItems, setFilteredItems] = useState<InventoryItem[]>([]);
+    const [searchValue, setSearchValue] = useState('');
+
     useEffect(() => {
-        axios.get('/api/items')
-            .then(response => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get('/api/items');
                 setItems(response.data.items);
-            })
-            .catch(error => console.error('Error fetching items:', error));
+            } catch (error) {
+                console.error('Error fetching items:', error);
+            }
+        };
+
+        fetchData();
     }, []);
+
+    const normalizeSearchString = (str: string) => {
+        return str.normalize("NFC").toUpperCase()
+            .replace(/[ぁ-ん]/g, s => String.fromCharCode(s.charCodeAt(0) + 0x60)) // ひらがなをカタカナに変換
+            .replace(/[Ａ-Ｚａ-ｚ０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0)); // 全角英数字を半角に変換
+    };
+
+    useEffect (() => {
+        const normalizedSearchValue = normalizeSearchString(searchValue);
+        const filtered = items.filter(item =>
+            normalizeSearchString(item.productName).includes(normalizedSearchValue) ||
+            normalizeSearchString(item.modelNumber).includes(normalizedSearchValue) ||
+            normalizeSearchString(item.location).includes(normalizedSearchValue) ||
+            normalizeSearchString(item.remarks).includes(normalizedSearchValue)
+        );
+        setFilteredItems(filtered);
+    }, [searchValue, items]);
+
     return (
         <AuthenticatedLayout
             user={auth.user}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">在庫管理</h2>}
+            header={<h2 className="font-semibold text-xl pb-1 text-white leading-tight text-left">在庫管理一覧</h2>}
         >
-            <Head title="Inventory" />
-            <div className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <table className="min-w-full">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>商品名</th>
-                                    <th>型番</th>
-                                    <th>納品場所</th>
-                                    <th>入庫数量</th>
-                                    <th>出庫数量</th>
-                                    <th>在庫数量</th>
-                                    <th>備考</th>
+            <Head title="在庫管理システム" />
+            <div className="mx-auto sm:px-6 lg:px-8">
+                <input
+                    id="search"
+                    className="w-full mb-4 rounded-lg"
+                    type="text"
+                    placeholder="検索する文字を入力してください"
+                    value={searchValue}
+                    onChange={e => setSearchValue(e.target.value)}
+                />
+                <div className="overflow-hidden shadow-sm sm:rounded-lg">
+                    <table className="w-full border-4 border-lightblue bg-deepblue">
+                        <thead>
+                            <tr className='text-white grid grid-cols-9 text-white border-b-2 border-lightblue mr-2 ml-2'>
+                                <th className='py-3 pl-1 text-center'><input type='checkbox' className='border-lightblue bg-deepblue'></input></th>
+                                <th className="py-3 px-4 text-center">No</th>
+                                <th className="py-3 px-4 text-center">商品名</th>
+                                <th className="py-3 px-4 text-center">型番</th>
+                                <th className="py-3 px-4 text-center">納品場所</th>
+                                <th className="py-3 px-4 text-center">入庫数量</th>
+                                <th className="py-3 px-4 text-center">出庫数量</th>
+                                <th className="py-3 px-4 text-center">在庫数量</th>
+                                <th className="py-3 px-4 text-center">備考</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {filteredItems.map(item => (
+                                <tr key={item.id} className=' mt-4 mr-2 ml-2 mb-2 grid grid-cols-9 text-white border-2 border-lightblue rounded-md'>
+                                    <td className='py-3 text-center'><input type='checkbox' className='border-lightblue bg-deepblue'></input></td>
+                                    <td className="py-3 px-4 text-center">{item.id}</td>
+                                    <td className="py-3 px-4 text-center">{item.productName}</td>
+                                    <td className="py-3 px-4 text-center">{item.modelNumber}</td>
+                                    <td className="py-3 px-4 text-center">{item.location}</td>
+                                    <td className="py-3 px-4 text-center">{item.inItem}</td>
+                                    <td className="py-3 px-4 text-center">{item.outItem}</td>
+                                    <td className="py-3 px-4 text-center">{item.inventoryItem}</td>
+                                    <td className="py-3 px-4 text-center">{item.remarks}</td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {items.map(item => (
-                                    <tr key={item.id}>
-                                        <td className="text-center">{item.id}</td>
-                                        <td className="text-center">{item.productName}</td>
-                                        <td className="text-center">{item.modelNumber}</td>
-                                        <td className="text-center">{item.location}</td>
-                                        <td className="text-center">{item.inItem}</td>
-                                        <td className="text-center">{item.outItem}</td>
-                                        <td className="text-center">{item.inventoryItem}</td>
-                                        <td className="text-center">{item.remarks}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                    <div className="p-6 text-gray-900">
-                            リアルタイム通知履歴
-                            {/* 多分履歴表示場所 */}
-                            <div>2024/4/1 18:00:45 --- 何某が5個の商品を登録しました。</div>
-                    </div>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+                <div className="p-6 text-white">
+                        リアルタイム通知履歴
+                        {/* 多分履歴表示場所 */}
+                        <div>2024/4/1 18:00:45 --- 何某が5個の商品を登録しました。</div>
                 </div>
             </div>
         </AuthenticatedLayout>

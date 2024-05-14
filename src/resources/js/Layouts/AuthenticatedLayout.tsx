@@ -10,9 +10,9 @@ export default function Authenticated({ user, header, children }: PropsWithChild
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
 
     return (
-        <div className="min-h-screen bg-gray-100">
-            <nav className="bg-white border-b border-gray-100">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-deepblue">
+            <nav className="bg-deepblue border-b border-gray-100">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ml-0">
                     <div className="flex justify-between h-16">
                         <div className="flex">
                             <div className="shrink-0 flex items-center">
@@ -22,13 +22,13 @@ export default function Authenticated({ user, header, children }: PropsWithChild
                             </div>
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={route('index')} active={route().current('index')}>
+                                <NavLink href={route('index')} active={route().current('index')} className="text-white">
                                     在庫一覧
                                 </NavLink>
-                                <NavLink href={route('index')} active={route().current('index')}>
+                                <NavLink href={route('index')} active={route().current('index')} className="text-white">
                                     入庫登録
                                 </NavLink>
-                                <NavLink href={route('index')} active={route().current('index')}>
+                                <NavLink href={route('index')} active={route().current('index')} className="text-white">
                                     出庫登録
                                 </NavLink>
                             </div>
@@ -41,10 +41,9 @@ export default function Authenticated({ user, header, children }: PropsWithChild
                                         <span className="inline-flex rounded-md">
                                             <button
                                                 type="button"
-                                                className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
+                                                className="inline-flex items-center px-3 py-2 border-lightblue text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
                                             >
                                                 {user.name}
-
                                                 <svg
                                                     className="ms-2 -me-0.5 h-4 w-4"
                                                     xmlns="http://www.w3.org/2000/svg"
@@ -123,8 +122,8 @@ export default function Authenticated({ user, header, children }: PropsWithChild
             </nav>
 
             {header && (
-                <header className="bg-white shadow">
-                    <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">{header}</div>
+                <header className="bg-deepblue shadow">
+                    <div className="max-w-7xl mx-auto  py-8 pb-1 sm:px-6 lg:px-8">{header}</div>
                 </header>
             )}
 
