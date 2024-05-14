@@ -21,12 +21,14 @@ export default function InventoryDashboard({ auth }: PageProps) {
     const [items, setItems] = useState<InventoryItem[]>([]);
     const [filteredItems, setFilteredItems] = useState<InventoryItem[]>([]);
     const [searchValue, setSearchValue] = useState('');
+    const [checkBox, setCheckBox] = useState<boolean[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await axios.get('/api/items');
                 setItems(response.data.items);
+                setCheckBox(new Array(response.data.items.length).fill(false));
             } catch (error) {
                 console.error('Error fetching items:', error);
             }
@@ -34,12 +36,15 @@ export default function InventoryDashboard({ auth }: PageProps) {
 
         fetchData();
     }, []);
+    const handleMasterCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setCheckBox(new Array(checkBox.length).fill(e.target.checked));
+    };
 
     const normalizeSearchString = (str: string) => {
         return str.normalize("NFC").toUpperCase()
-            .replace(/[ぁ-ん]/g, s => String.fromCharCode(s.charCodeAt(0) + 0x60)) // ひらがなをカタカナに変換
-            .replace(/[Ａ-Ｚａ-ｚ０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0)); // 全角英数字を半角に変換
-    };
+        .replace(/[ぁ-ん]/g, s => String.fromCharCode(s.charCodeAt(0) + 0x60))
+        .replace(/[Ａ-Ｚａ-ｚ０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
+};
 
     useEffect (() => {
         const normalizedSearchValue = normalizeSearchString(searchValue);
@@ -71,7 +76,13 @@ export default function InventoryDashboard({ auth }: PageProps) {
                     <table className="w-full border-4 border-lightblue bg-deepblue">
                         <thead>
                             <tr className='text-white grid grid-cols-9 text-white border-b-2 border-lightblue mr-2 ml-2'>
-                                <th className='py-3 pl-1 text-center'><input type='checkbox' className='border-lightblue bg-deepblue'></input></th>
+                            <th className='py-3 pl-1 text-center'>
+                                <input
+                                    type='checkbox'
+                                    className='border-lightblue bg-deepblue'
+                                    onChange={handleMasterCheckboxChange}
+                                />
+                            </th>
                                 <th className="py-3 px-4 text-center">No</th>
                                 <th className="py-3 px-4 text-center">商品名</th>
                                 <th className="py-3 px-4 text-center">型番</th>
@@ -83,9 +94,20 @@ export default function InventoryDashboard({ auth }: PageProps) {
                             </tr>
                         </thead>
                         <tbody>
-                            {filteredItems.map(item => (
+                            {filteredItems.map((item, index) => (
                                 <tr key={item.id} className=' mt-4 mr-2 ml-2 mb-2 grid grid-cols-9 text-white border-2 border-lightblue rounded-md'>
-                                    <td className='py-3 text-center'><input type='checkbox' className='border-lightblue bg-deepblue'></input></td>
+                                    <td className='py-3 text-center'>
+                                        <input
+                                            type='checkbox'
+                                            className='border-lightblue bg-deepblue'
+                                            checked={checkBox[index]}
+                                            onChange={() => {
+                                                const newCheckBox = [...checkBox];
+                                                newCheckBox[index] = !newCheckBox[index];
+                                                setCheckBox(newCheckBox);
+                                            }}
+                                        />
+                                    </td>
                                     <td className="py-3 px-4 text-center">{item.id}</td>
                                     <td className="py-3 px-4 text-center">{item.productName}</td>
                                     <td className="py-3 px-4 text-center">{item.modelNumber}</td>
@@ -107,4 +129,4 @@ export default function InventoryDashboard({ auth }: PageProps) {
             </div>
         </AuthenticatedLayout>
     );
-}
+};
