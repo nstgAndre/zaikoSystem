@@ -4,7 +4,7 @@ import { PageProps } from '@/types';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import React from 'react';
-
+import DangerButton from '@/Components/DangerButton';
 
 interface InventoryItem {
     id: number;
@@ -41,13 +41,14 @@ export default function InventoryDashboard({ auth }: PageProps) {
     };
 
     const normalizeSearchString = (str: string) => {
+
         if (!str) return ""; 
         return str.normalize("NFC").toUpperCase()
             .replace(/[ぁ-ん]/g, s => String.fromCharCode(s.charCodeAt(0) + 0x60))
             .replace(/[Ａ-Ｚａ-ｚ０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
     };
 
-    useEffect (() => {
+    useEffect(() => {
         const normalizedSearchValue = normalizeSearchString(searchValue);
         const filtered = items.filter(item =>
             normalizeSearchString(item.productName).includes(normalizedSearchValue) ||
@@ -61,7 +62,7 @@ export default function InventoryDashboard({ auth }: PageProps) {
     return (
         <AuthenticatedLayout
             user={auth.user}
-            header={<h2 className="font-semibold text-xl pb-1 text-white leading-tight text-left">在庫管理一覧</h2>}
+            header={<h2 className="font-semibold text-xl pb-1 text-white leading-tight text-center">在庫管理一覧</h2>}
         >
             <Head title="在庫管理システム" />
             <div className="mx-auto sm:px-6 lg:px-8">
@@ -73,17 +74,24 @@ export default function InventoryDashboard({ auth }: PageProps) {
                     value={searchValue}
                     onChange={e => setSearchValue(e.target.value)}
                 />
+
+                <div className="flex justify-end">
+                    <DangerButton className="text-white border-2 !bg-deepblue !border-lightblue rounded-md mb-2 !focus:ring-blue-500">
+                        CSVダウンロード
+                    </DangerButton>
+                </div>
+
                 <div className="overflow-hidden shadow-sm sm:rounded-lg">
                     <table className="w-full border-4 border-lightblue bg-deepblue">
                         <thead>
                             <tr className='text-white grid grid-cols-9 text-white border-b-2 border-lightblue mr-2 ml-2'>
-                            <th className='py-3 pl-1 text-center'>
-                                <input
-                                    type='checkbox'
-                                    className='border-lightblue bg-deepblue'
-                                    onChange={handleMasterCheckboxChange}
-                                />
-                            </th>
+                                <th className='py-3 pl-1 text-center'>
+                                    <input
+                                        type='checkbox'
+                                        className='border-lightblue bg-deepblue'
+                                        onChange={handleMasterCheckboxChange}
+                                    />
+                                </th>
                                 <th className="py-3 px-4 text-center">No</th>
                                 <th className="py-3 px-4 text-center">商品名</th>
                                 <th className="py-3 px-4 text-center">型番</th>
@@ -123,9 +131,9 @@ export default function InventoryDashboard({ auth }: PageProps) {
                     </table>
                 </div>
                 <div className="p-6 text-white">
-                        リアルタイム通知履歴
-                        {/* 多分履歴表示場所 */}
-                        <div>2024/4/1 18:00:45 --- 何某が5個の商品を登録しました。</div>
+                    リアルタイム通知履歴
+                    {/* 多分履歴表示場所 */}
+                    <div>2024/4/1 18:00:45 --- 何某が5個の商品を登録しました。</div>
                 </div>
             </div>
         </AuthenticatedLayout>
