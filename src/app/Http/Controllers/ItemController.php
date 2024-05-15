@@ -116,6 +116,6 @@ class ItemController extends Controller
             'Content-Disposition' => 'attachment; filename="items.csv"',
         ]);
 
-        return $response;
+        return response()->json(['success' => $response]);
     }
 }
