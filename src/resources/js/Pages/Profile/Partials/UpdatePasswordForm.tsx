@@ -49,6 +49,16 @@ export default function UpdatePasswordForm({ className = '' }: { className?: str
 
 
             <form onSubmit={updatePassword} className="mt-6 space-y-6">
+            <Transition
+                        show={recentlySuccessful}
+                        enter="transition ease-in-out"
+                        enterFrom="opacity-0"
+                        leave="transition ease-in-out"
+                        leaveTo="opacity-0"
+                    >
+                        <p className="text-sm text-red-600">パスワード更新されました</p>
+
+                    </Transition>
                 <div>
                     <InputLabel htmlFor="current_password" value="旧パスワード" />
 
@@ -99,15 +109,7 @@ export default function UpdatePasswordForm({ className = '' }: { className?: str
                 <div className="flex items-center gap-4">
                     <PrimaryButton disabled={processing}>保存</PrimaryButton>
 
-                    <Transition
-                        show={recentlySuccessful}
-                        enter="transition ease-in-out"
-                        enterFrom="opacity-0"
-                        leave="transition ease-in-out"
-                        leaveTo="opacity-0"
-                    >
-                        <p className="text-sm text-gray-600">Saved.</p>
-                    </Transition>
+                    
                 </div>
             </form>
         </section>
