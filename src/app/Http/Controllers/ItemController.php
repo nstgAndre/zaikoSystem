@@ -15,9 +15,10 @@ class ItemController extends Controller
      */
     public function index()
     {
-        $items = Item::all();
+        $items = Item::paginate(10);
         // $list = $items;
-		return response()->json(['items' => $items]);
+		// return response()->json(['items' => $items]);
+        return response()->json($items);
     }
 
     /**
