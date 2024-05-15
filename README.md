@@ -63,3 +63,8 @@ DB_USERNAME=user
 DB_PASSWORD=password
 
 ```
+
+12.CSVダウンロードの為ダウンロードすること
+```
+composer require usmanhalalit/laracsv
+```
