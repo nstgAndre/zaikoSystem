@@ -64,7 +64,7 @@ export default function InventoryDashboard({ auth }: PageProps) {
     return (
         <AuthenticatedLayout
             user={auth.user}
-            header={<h2 className="font-semibold text-xl pb-1 text-white leading-tight text-center">在庫管理一覧</h2>}
+            header={<h2 className="font-semibold text-xl pb-1 text-white leading-tight text-center">出庫記録</h2>}
         >
             <Head title="在庫管理システム" />
             <div className="mx-auto sm:px-6 lg:px-8">
