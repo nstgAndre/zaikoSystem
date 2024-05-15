@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Item;
+<<<<<<< HEAD
 use Illuminate\Support\Facades\Response;
+=======
+use Illuminate\Support\Facades\Auth;
+>>>>>>> 57737e1cab55b8ea7308b2eff367b4a7596035b4
 
 class ItemController extends Controller
 {
@@ -23,7 +27,9 @@ class ItemController extends Controller
      */
     public function create()
     {
-        //
+        $items = []; 
+        return response()->json(['items' => $items]);
+        // return view('createTest');
     }
 
     /**
@@ -31,7 +37,36 @@ class ItemController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        #バリデーション
+        $rules = [
+            'productName' => 'required|string',
+            'modelNumber' => 'required|string',
+            'location' => 'required|string',
+            'inItem' => 'required|integer|min:0',
+            'inventoryItem' => 'required|integer|min:0',
+            'remarks' => 'nullable|string',
+        ];
+
+        $validatedData = $request->validate($rules);
+        if ($validatedData['inventoryItem'] != $validatedData['inItem']) {
+            return redirect()->back()->withInput()->withErrors(['inventoryItem' => '在庫数量は入庫数量と同じでなければなりません。']);
+        }
+
+        $item = new Item();
+        $item->productName = $validatedData['productName'];
+        $item->modelNumber = $validatedData['modelNumber'];
+        $item->location = $validatedData['location'];
+        $item->inItem = $validatedData['inItem'];
+        $item->inventoryItem = $validatedData['inventoryItem'];
+        $item->save();
+
+        // メッセージ表示
+        // 変更します。
+        $user = Auth::user()->name;
+        $productName = $validatedData['productName'];
+        $message = "$user さんが $productName を登録しました。";
+        // return redirect()->route('dashboard')->with('success', $message);
+        return response()->json(['success' => $message]);
     }
 
     /**
