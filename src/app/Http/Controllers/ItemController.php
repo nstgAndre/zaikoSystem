@@ -4,11 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Item;
-<<<<<<< HEAD
 use Illuminate\Support\Facades\Response;
-=======
 use Illuminate\Support\Facades\Auth;
->>>>>>> 57737e1cab55b8ea7308b2eff367b4a7596035b4
+
 
 class ItemController extends Controller
 {
