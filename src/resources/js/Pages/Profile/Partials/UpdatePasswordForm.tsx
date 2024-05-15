@@ -41,13 +41,6 @@ export default function UpdatePasswordForm({ className = '' }: { className?: str
             {/* <header>
                 <h2 className="text-lg font-medium text-gray-900">パスワード更新</h2>
             </header> */}
-
-            
-
-
-
-
-
             <form onSubmit={updatePassword} className="mt-6 space-y-6">
             <Transition
                         show={recentlySuccessful}

@@ -72,7 +72,11 @@ class ItemController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $item = Item::find($id);
+        if(!$item) {
+            return response()->json(['error' => 'アイテムが見つかりません'], 404);
+        }
+        return response()->json(['item' => $item]);
     }
 
     /**
@@ -80,7 +84,11 @@ class ItemController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $item = Item::find($id);
+        if(!$item) {
+            return response()->json(['error' => 'アイテムが見つかりません'], 404);
+        }
+        return response()->json(['item' => $item]);
     }
 
     /**
@@ -88,7 +96,35 @@ class ItemController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $item = Item::find($id);
+        if($item) {
+            return response()->json(['error' => 'アイテムが見つかりません'], 404);
+        }
+
+        $rules = [
+            'productName' => 'required|string',
+            'modelNumber' => 'required|string',
+            'location' => 'required|string',
+            'inItem' => 'required|integer|min:0',
+            'inventoryItem' => 'required|integer|min:0',
+            'remarks' => 'nullable|string',
+        ];
+        
+        $validated = $request->validate($rules);
+
+        if($validated['inventoryItem'] != $validated['inItem']) {
+            return response()->json(['error' =>'在庫数量は入庫数量と同じでなければなりません。'], 422);
+        }
+
+        $item->productName = $validated['productName'];
+        $item->modelNumber = $validated['modelNumber'];
+        $item->location = $validated['location'];
+        $item->inItem = $validated['inItem'];
+        $item->inventoryItem = $validated['inventoryItem'];
+        $item->remarks = $validated['remarks'] ?? $item->remarks;
+        $item->save();
+
+        return response()->json(['success' => '更新成功しました']);
     }
 
     /**
