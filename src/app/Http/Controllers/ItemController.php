@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Item;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Auth;
+
 
 class ItemController extends Controller
 {
@@ -13,9 +15,10 @@ class ItemController extends Controller
      */
     public function index()
     {
-        $items = Item::all();
+        $items = Item::all()->paginate(10);
         // $list = $items;
-		return response()->json(['items' => $items]);
+		// return response()->json(['items' => $items]);
+        return response()->json($items);
     }
 
     /**
@@ -70,7 +73,11 @@ class ItemController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $item = Item::find($id);
+        if(!$item) {
+            return response()->json(['error' => 'アイテムが見つかりません'], 404);
+        }
+        return response()->json(['item' => $item]);
     }
 
     /**
@@ -78,7 +85,11 @@ class ItemController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $item = Item::find($id);
+        if(!$item) {
+            return response()->json(['error' => 'アイテムが見つかりません'], 404);
+        }
+        return response()->json(['item' => $item]);
     }
 
     /**
@@ -86,7 +97,35 @@ class ItemController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $item = Item::find($id);
+        if($item) {
+            return response()->json(['error' => 'アイテムが見つかりません'], 404);
+        }
+
+        $rules = [
+            'productName' => 'required|string',
+            'modelNumber' => 'required|string',
+            'location' => 'required|string',
+            'inItem' => 'required|integer|min:0',
+            'inventoryItem' => 'required|integer|min:0',
+            'remarks' => 'nullable|string',
+        ];
+        
+        $validated = $request->validate($rules);
+
+        if($validated['inventoryItem'] != $validated['inItem']) {
+            return response()->json(['error' =>'在庫数量は入庫数量と同じでなければなりません。'], 422);
+        }
+
+        $item->productName = $validated['productName'];
+        $item->modelNumber = $validated['modelNumber'];
+        $item->location = $validated['location'];
+        $item->inItem = $validated['inItem'];
+        $item->inventoryItem = $validated['inventoryItem'];
+        $item->remarks = $validated['remarks'] ?? $item->remarks;
+        $item->save();
+
+        return response()->json(['success' => '更新成功しました']);
     }
 
     /**
@@ -95,5 +134,25 @@ class ItemController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+
+    // 参考記事
+    // https://webty.jp/staffblog/production/post-2990/
+    // 手動でダウンロード必要！
+    // composer require usmanhalalit/laracsv
+    public function csv(Request $request)
+    {
+        $items = Item::all();
+        $selectItems = new \Laracsv\Export();
+        $selectItems->build($items, ['id', 'productName', 'modelNumber', 'location', 'inItem', 'outItem', 'inventoryItem', 'remarks']);
+        $csv = $selectItems->getCsv();
+
+        $response = Response::make($csv, 200, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="items.csv"',
+        ]);
+
+        return response()->json(['success' => $response]);
     }
 }
