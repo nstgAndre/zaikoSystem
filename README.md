@@ -68,3 +68,9 @@ DB_PASSWORD=password
 ```
 composer require usmanhalalit/laracsv
 ```
+
+
+13.実行したコマンドリスト
+```
+npm i react-loader-spinner
+```
