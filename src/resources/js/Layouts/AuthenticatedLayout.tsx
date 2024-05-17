@@ -5,8 +5,6 @@ import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link } from '@inertiajs/react';
 import { User } from '@/types';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-
 
 export default function Authenticated({ user, header, children }: PropsWithChildren<{ user: User, header?: ReactNode }>) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
@@ -17,12 +15,11 @@ export default function Authenticated({ user, header, children }: PropsWithChild
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ml-0">
                     <div className="flex justify-between h-16">
                         <div className="flex">
-                            <div className="shrink-0 flex items-center">
-                                <Link href="/">
-                                    <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800" />
+                        <div className="shrink-0 flex items-center">
+                                <Link href={route('index')}>
+                                    <img src="/images/在庫管理最新.png" alt="在庫管理" className="block h-40 w-[180px] " />
                                 </Link>
-                            </div>
-
+                        </div>
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink href={route('index')} active={route().current('index')} className="text-white">
                                     在庫一覧

@@ -54,7 +54,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-Route::get('/api/items/csv', [ItemController::class, 'csv']);
+Route::post('/api/items/csv', [ItemController::class, 'csv']);
 });
 
 Route::middleware('auth')->group(function () {

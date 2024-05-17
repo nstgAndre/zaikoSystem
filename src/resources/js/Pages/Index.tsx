@@ -23,6 +23,7 @@ export default function InventoryDashboard({ auth }: PageProps) {
     const [Loading, setLoading] = useState(false);
     const [searchValue, setSearchValue] = useState('');
     const [checkBox, setCheckBox] = useState<boolean[]>([]);
+    const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -33,6 +34,7 @@ export default function InventoryDashboard({ auth }: PageProps) {
                 setCheckBox(new Array(response.data.items.length).fill(false));
             } catch (error) {
                 console.error('Error fetching items:', error);
+                setErrorMessage('アイテムの取得中にエラーが発生しました。');
             }
             setLoading(false);
         };
@@ -43,10 +45,19 @@ export default function InventoryDashboard({ auth }: PageProps) {
 
     const handleDownloadCsv = async () => {
         try {
+            const selectedIds = items.filter((_, index) => checkBox[index]).map(item => item.id);
+            if (selectedIds.length === 0 || selectedIds.some(id => typeof id !== 'number')) {
+                setErrorMessage('エラー: 選択されたアイテムがありません。');
+                return;
+            }
             const response = await axios({
                 url: '/api/items/csv',
-                method: 'GET',
-                responseType: 'blob',  // この設定が重要
+                method: 'POST',
+                responseType: 'blob',
+                data: { ids: selectedIds },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
@@ -57,10 +68,18 @@ export default function InventoryDashboard({ auth }: PageProps) {
             if (link.parentNode) {
                 link.parentNode.removeChild(link);
             }
+            setErrorMessage('');
         } catch (error) {
             console.error('Error downloading the CSV file:', error);
+            const typedError = error as { response?: { data?: { error?: string } } };
+            if (typedError.response && typedError.response.data && typedError.response.data.error) {
+                setErrorMessage(typedError.response.data.error);
+            } else {
+                setErrorMessage('ダウンロード中に未知のエラーが発生しました。');
+            }
         }
     };
+
     const handleMasterCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setCheckBox(new Array(checkBox.length).fill(e.target.checked));
     };
@@ -69,7 +88,6 @@ export default function InventoryDashboard({ auth }: PageProps) {
 
         if (!str) return "";
         return str.normalize("NFC").toUpperCase()
-            .replace(/[ぁ-ん]/g, s => String.fromCharCode(s.charCodeAt(0) + 0x60))
             .replace(/[Ａ-Ｚａ-ｚ０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
     };
 
@@ -101,7 +119,6 @@ export default function InventoryDashboard({ auth }: PageProps) {
                 />
                 {Loading ? (
                     <>
-                        {/* <p className="text-white">Loading...</p> */}
                         <div className="flex justify-center items-center">
                             <Loader color="#00BFFF" height={80} width={80} />
                         </div>
@@ -165,10 +182,13 @@ export default function InventoryDashboard({ auth }: PageProps) {
                         </div>
                     </>
                 )}
-                <div className="p-6 text-white">
+                <div className="p-6 text-white border-2 border-blue-500 p-4 mt-4 rounded">
                     リアルタイム通知履歴
-                    {/* 多分履歴表示場所 */}
-                    <div>2024/4/1 18:00:45 --- 何某が5個の商品を登録しました。</div>
+                    {errorMessage && (
+                        <div className="mt-2 text-red-500">
+                            {errorMessage}
+                        </div>
+                    )}
                 </div>
             </div>
         </AuthenticatedLayout>
