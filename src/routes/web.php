@@ -33,13 +33,18 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+//ナビゲーションメニュー
 Route::get('/index', function () {
     return Inertia::render('Index');
 })->middleware(['auth', 'verified'])->name('index');
 
-//Index画面
+//商品情報取得api
 Route::middleware('auth')->group(function () {
     Route::get('/api/items', [ItemController::class, 'index']);
+});
+
+Route::middleware('auth')->group(function () {
+Route::get('/api/items/csv', [ItemController::class, 'csv']);
 });
 
 Route::middleware('auth')->group(function () {

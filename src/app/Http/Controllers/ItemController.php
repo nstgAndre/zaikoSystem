@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Item;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Auth;
-
+use Laracsv\Export;
 
 class ItemController extends Controller
 {
@@ -15,10 +15,10 @@ class ItemController extends Controller
      */
     public function index()
     {
-        $items = Item::all()->paginate(10);
+        $items = Item::all();
         // $list = $items;
-		// return response()->json(['items' => $items]);
-        return response()->json($items);
+		return response()->json(['items' => $items]);
+        // return response()->json($items);
     }
 
     /**
@@ -145,14 +145,24 @@ class ItemController extends Controller
     {
         $items = Item::all();
         $selectItems = new \Laracsv\Export();
-        $selectItems->build($items, ['id', 'productName', 'modelNumber', 'location', 'inItem', 'outItem', 'inventoryItem', 'remarks']);
-        $csv = $selectItems->getCsv();
-
-        $response = Response::make($csv, 200, [
-            'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename="items.csv"',
+        $selectItems->build($items, [
+            'id' => 'ID',
+            'productName' => '商品名',
+            'modelNumber' => '型番',
+            'location' => '場所',
+            'inItem' => '入庫数',
+            'outItem' => '出庫数',
+            'inventoryItem' => '在庫数',
+            'remarks' => '備考',
+            'created_at' => '登録日'
         ]);
+        $csvReader = $selectItems->getReader();
 
-        return response()->json(['success' => $response]);
+        $csvReader->setOutputBOM(\League\Csv\Reader::BOM_UTF8); //文字化け対応
+        $filename = 'items.csv';
+
+        return response((string) $csvReader)
+            ->header('Content-Type', 'text/csv; charset=UTF-8')
+            ->header('Content-Disposition', 'attachment; filename="'.$filename.'"');
     }
 }
