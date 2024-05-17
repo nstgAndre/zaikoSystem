@@ -37,6 +37,15 @@ Route::get('/index', function () {
     return Inertia::render('Index');
 })->middleware(['auth', 'verified'])->name('index');
 
+Route::get('/DeliverRegister', function () {
+    return Inertia::render('DeliverRegister');
+})->middleware(['auth', 'verified'])->name('DeliverRegister');
+
+Route::get('/StorageRegister', function () {
+    return Inertia::render('StorageRegister');
+})->middleware(['auth', 'verified'])->name('StorageRegister');
+
+
 //Index画面
 Route::middleware('auth')->group(function () {
     Route::get('/api/items', [ItemController::class, 'index']);

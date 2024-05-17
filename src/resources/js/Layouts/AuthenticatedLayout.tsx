@@ -5,6 +5,8 @@ import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link } from '@inertiajs/react';
 import { User } from '@/types';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+
 
 export default function Authenticated({ user, header, children }: PropsWithChildren<{ user: User, header?: ReactNode }>) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
@@ -25,10 +27,10 @@ export default function Authenticated({ user, header, children }: PropsWithChild
                                 <NavLink href={route('index')} active={route().current('index')} className="text-white">
                                     在庫一覧
                                 </NavLink>
-                                <NavLink href={route('index')} active={route().current('index')} className="text-white">
+                                <NavLink href={route('DeliverRegister')} active={route().current('DeliverRegister')} className="text-white">
                                     入庫登録
                                 </NavLink>
-                                <NavLink href={route('index')} active={route().current('index')} className="text-white">
+                                <NavLink href={route('StorageRegister')} active={route().current('StorageRegister')} className="text-white">
                                     出庫登録
                                 </NavLink>
                             </div>
@@ -120,9 +122,10 @@ export default function Authenticated({ user, header, children }: PropsWithChild
                     </div>
                 </div>
             </nav>
-
+            
             {header && (
                 <header className="bg-deepblue shadow">
+                    
                     <div className="max-w-7xl mx-auto  py-8 pb-1 sm:px-6 lg:px-8">{header}</div>
                 </header>
             )}
