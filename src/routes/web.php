@@ -33,9 +33,11 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+//ナビゲーションメニュー
 Route::get('/index', function () {
     return Inertia::render('Index');
 })->middleware(['auth', 'verified'])->name('index');
+
 
 Route::get('/DeliverRegister', function () {
     return Inertia::render('DeliverRegister');
@@ -45,10 +47,14 @@ Route::get('/StorageRegister', function () {
     return Inertia::render('StorageRegister');
 })->middleware(['auth', 'verified'])->name('StorageRegister');
 
+//商品情報取得api
 
-//Index画面
 Route::middleware('auth')->group(function () {
     Route::get('/api/items', [ItemController::class, 'index']);
+});
+
+Route::middleware('auth')->group(function () {
+Route::get('/api/items/csv', [ItemController::class, 'csv']);
 });
 
 Route::middleware('auth')->group(function () {
