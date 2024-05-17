@@ -12,7 +12,7 @@ export default function Authenticated({ user, header, children }: PropsWithChild
     return (
         <div className="min-h-screen bg-deepblue">
             <nav className="bg-deepblue border-b border-gray-100">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ml-0">
+                <div className="max-w-1xl mx-auto px-4 sm:px-6 lg:px-8 ml-0">
                     <div className="flex justify-between h-16">
                         <div className="flex">
                         <div className="shrink-0 flex items-center">
@@ -123,7 +123,7 @@ export default function Authenticated({ user, header, children }: PropsWithChild
             {header && (
                 <header className="bg-deepblue shadow">
                     
-                    <div className="max-w-7xl mx-auto  py-8 pb-1 sm:px-6 lg:px-8">{header}</div>
+                    <div className="max-w-1xl mx-auto  py-8 pb-1 sm:px-6 lg:px-8">{header}</div>
                 </header>
             )}
 
