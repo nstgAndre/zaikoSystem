@@ -38,13 +38,23 @@ Route::get('/index', function () {
     return Inertia::render('Index');
 })->middleware(['auth', 'verified'])->name('index');
 
+
+Route::get('/DeliverRegister', function () {
+    return Inertia::render('DeliverRegister');
+})->middleware(['auth', 'verified'])->name('DeliverRegister');
+
+Route::get('/StorageRegister', function () {
+    return Inertia::render('StorageRegister');
+})->middleware(['auth', 'verified'])->name('StorageRegister');
+
 //商品情報取得api
+
 Route::middleware('auth')->group(function () {
     Route::get('/api/items', [ItemController::class, 'index']);
 });
 
 Route::middleware('auth')->group(function () {
-Route::get('/api/items/csv', [ItemController::class, 'csv']);
+Route::post('/api/items/csv', [ItemController::class, 'csv']);
 });
 
 Route::middleware('auth')->group(function () {
