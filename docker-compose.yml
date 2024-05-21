@@ -17,6 +17,7 @@ services:
       - postgres
     ports:
       - "5173:5173"
+    working_dir: /var/www/html/src
   postgres:
     image: postgres:latest
     restart: always

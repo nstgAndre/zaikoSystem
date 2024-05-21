@@ -5,6 +5,7 @@ import { ThreeDots as Loader } from 'react-loader-spinner';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import DangerButton from '@/Components/DangerButton';
 import { PageProps } from '@/types';
+import Modal from '@/Components/Modal';
 
 interface InventoryItem {
     id: number;
@@ -24,7 +25,19 @@ export default function InventoryDashboard({ auth }: PageProps) {
     const [searchValue, setSearchValue] = useState('');
     const [checkBox, setCheckBox] = useState<boolean[]>([]);
     const [errorMessage, setErrorMessage] = useState('');
+    const [modalShow, setModalShow] = useState(false);
+    const [selectedRemark, setSelectedRemark] = useState('');
 
+    // モーダルを開く関数
+    const openModal = (remark: string) => {
+        setSelectedRemark(remark);
+        setModalShow(true);
+    };
+
+    // モーダルを閉じる関数
+    const closeModal = () => {
+        setModalShow(false);
+    };
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
@@ -174,11 +187,28 @@ export default function InventoryDashboard({ auth }: PageProps) {
                                             <td className="py-3 px-4 text-center">{item.inItem}</td>
                                             <td className="py-3 px-4 text-center">{item.outItem}</td>
                                             <td className="py-3 px-4 text-center">{item.inventoryItem}</td>
-                                            <td className="py-3 px-4 text-center">{item.remarks}</td>
+                                            <td className="py-3 px-4 text-center">
+                                                <DangerButton onClick={() => openModal(item.remarks)} className="text-white !bg-gold">
+                                                    詳細
+                                                </ DangerButton>
+                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>
                             </table>
+                            <Modal show={modalShow} onClose={closeModal}>
+                                <div className="p-4">
+                                    <h3 className="text-lg font-semibold">備考詳細</h3>
+                                    <p>{selectedRemark}</p>
+                                    <button
+                                        onClick={closeModal}
+                                        className="absolute top-0 right-0 p-2 text-lg font-bold"
+                                        aria-label="Close"
+                                    >
+                                        ×
+                                    </button>
+                                </div>
+                            </Modal>
                         </div>
                     </>
                 )}
