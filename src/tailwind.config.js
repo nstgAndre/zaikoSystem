@@ -15,6 +15,7 @@ export default {
             colors: {
                 deepblue: '#02032C',
                 lightblue: '#69d8f0',
+                gold: '#e0c030'
             },
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],

@@ -5,6 +5,10 @@ import { ThreeDots as Loader } from 'react-loader-spinner';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import DangerButton from '@/Components/DangerButton';
 import { PageProps } from '@/types';
+import Modal from '@/Components/Modal';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFilter, faXmark } from '@fortawesome/free-solid-svg-icons';
+
 
 interface InventoryItem {
     id: number;
@@ -24,6 +28,22 @@ export default function InventoryDashboard({ auth }: PageProps) {
     const [searchValue, setSearchValue] = useState('');
     const [checkBox, setCheckBox] = useState<boolean[]>([]);
     const [errorMessage, setErrorMessage] = useState('');
+    const [modalShow, setModalShow] = useState(false);
+    const [selectedRemark, setSelectedRemark] = useState('');
+    const [currentPage, setCurrentPage] = useState(0);
+    const itemsPerPage = 5;
+
+    // モーダルを開く関数
+    const openModal = (remark: string) => {
+        setSelectedRemark(remark);
+        setModalShow(true);
+    };
+
+    // モーダルを閉じる関数
+    const closeModal = () => {
+        setModalShow(false);
+    };
+    
 
     useEffect(() => {
         const fetchData = async () => {
@@ -38,9 +58,19 @@ export default function InventoryDashboard({ auth }: PageProps) {
             }
             setLoading(false);
         };
-
+    
         fetchData();
 
+     //ブラウザ戻る防止
+        window.history.pushState(null, document.title, window.location.href);
+        const handlePopState = () => {
+            window.history.pushState(null, document.title, window.location.href);
+        };
+        window.addEventListener('popstate', handlePopState);
+    
+        return () => {
+            window.removeEventListener('popstate', handlePopState);
+        };
     }, []);
 
     const handleDownloadCsv = async () => {
@@ -102,6 +132,13 @@ export default function InventoryDashboard({ auth }: PageProps) {
         setFilteredItems(filtered);
     }, [searchValue, items]);
 
+    const handlePageClick = (event: { selected: number }) => {
+        setCurrentPage(event.selected);
+    };
+
+    const pageCount = Math.ceil(filteredItems.length / itemsPerPage);
+    const itemsDisplayed = filteredItems.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
+
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -109,14 +146,18 @@ export default function InventoryDashboard({ auth }: PageProps) {
         >
             <Head title="在庫管理システム" />
             <div className="mx-auto sm:px-6 lg:px-8">
-                <input
-                    id="search"
-                    className="w-full mb-4 rounded-lg"
-                    type="text"
-                    placeholder="検索する文字を入力してください"
-                    value={searchValue}
-                    onChange={e => setSearchValue(e.target.value)}
-                />
+                <div className="flex items-center w-full mb-4 relative">
+                    <input
+                        id="search"
+                        className="w-full pl-4 pr-4 py-2 rounded-lg"
+                        type="text"
+                        placeholder="検索する文字を入力してください"
+                        value={searchValue}
+                        onChange={e => setSearchValue(e.target.value)}
+                    />
+                    <FontAwesomeIcon icon={faFilter} className='absolute right-3' />
+                </div>
+
                 {Loading ? (
                     <>
                         <div className="flex justify-center items-center">
@@ -153,7 +194,7 @@ export default function InventoryDashboard({ auth }: PageProps) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {filteredItems.map((item, index) => (
+                                    {itemsDisplayed.map((item, index) => (
                                         <tr key={item.id} className=' mt-4 mr-2 ml-2 mb-2 grid grid-cols-9 text-white border-2 border-lightblue rounded-md'>
                                             <td className='py-3 text-center'>
                                                 <input
@@ -174,11 +215,28 @@ export default function InventoryDashboard({ auth }: PageProps) {
                                             <td className="py-3 px-4 text-center">{item.inItem}</td>
                                             <td className="py-3 px-4 text-center">{item.outItem}</td>
                                             <td className="py-3 px-4 text-center">{item.inventoryItem}</td>
-                                            <td className="py-3 px-4 text-center">{item.remarks}</td>
+                                            <td className="py-3 px-4 text-center">
+                                                <DangerButton onClick={() => openModal(item.remarks)} className="text-white !bg-gold">
+                                                    詳細
+                                                </ DangerButton>
+                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>
                             </table>
+                            <Modal show={modalShow} onClose={closeModal}>
+                                <div className="p-4">
+                                    <h3 className="text-lg font-semibold">備考詳細</h3>
+                                    <p>{selectedRemark}</p>
+                                    <button
+                                        onClick={closeModal}
+                                        className="absolute top-0 right-0 p-2 text-lg font-bold"
+                                        aria-label="Close"
+                                    >
+                                    <FontAwesomeIcon icon={faXmark}/>
+                                    </button>
+                                </div>
+                            </Modal>
                         </div>
                     </>
                 )}
