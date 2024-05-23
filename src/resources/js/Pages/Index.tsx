@@ -8,17 +8,8 @@ import { PageProps } from '@/types';
 import Modal from '@/Components/Modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { InventoryItem } from '@/types/inventoryItem';
 
-interface InventoryItem {
-    id: number;
-    productName: string;
-    modelNumber: string;
-    location: string;
-    inItem: number;
-    outItem: number;
-    inventoryItem: number;
-    remarks: string;
-}
 
 export default function InventoryDashboard({ auth }: PageProps) {
     const [items, setItems] = useState<InventoryItem[]>([]);
