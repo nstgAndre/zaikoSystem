@@ -13,12 +13,11 @@ class ItemController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $items = Item::all();
-        // $list = $items;
-		return response()->json(['items' => $items]);
-        // return response()->json($items);
+        $perPage = $request->input('per_page', 5); //per_pageパラメータが提供されなかった場合に使用されるデフォルト値
+        $items = Item::paginate($perPage);
+        return response()->json($items);
     }
 
     /**

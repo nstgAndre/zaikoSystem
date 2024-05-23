@@ -9,7 +9,6 @@ import Modal from '@/Components/Modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter, faXmark } from '@fortawesome/free-solid-svg-icons';
 
-
 interface InventoryItem {
     id: number;
     productName: string;
@@ -31,7 +30,8 @@ export default function InventoryDashboard({ auth }: PageProps) {
     const [modalShow, setModalShow] = useState(false);
     const [selectedRemark, setSelectedRemark] = useState('');
     const [currentPage, setCurrentPage] = useState(0);
-    const itemsPerPage = 5;
+    const [pageCount, setPageCount] = useState(0);
+    const itemsPerPage = 3; //表示件数
 
     // モーダルを開く関数
     const openModal = (remark: string) => {
@@ -43,35 +43,35 @@ export default function InventoryDashboard({ auth }: PageProps) {
     const closeModal = () => {
         setModalShow(false);
     };
-    
 
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const response = await axios.get('/api/items');
-                setItems(response.data.items);
-                setCheckBox(new Array(response.data.items.length).fill(false));
+                const response = await axios.get(`/api/items?page=${currentPage + 1}&per_page=${itemsPerPage}`);
+                setItems(prevItems => [...prevItems, ...response.data.data]);
+                setPageCount(response.data.last_page);
+                setCheckBox(new Array(response.data.data.length).fill(false));
             } catch (error) {
                 console.error('Error fetching items:', error);
                 setErrorMessage('アイテムの取得中にエラーが発生しました。');
             }
             setLoading(false);
         };
-    
+
         fetchData();
 
-     //ブラウザ戻る防止
+        //ブラウザ戻る防止
         window.history.pushState(null, document.title, window.location.href);
         const handlePopState = () => {
             window.history.pushState(null, document.title, window.location.href);
         };
         window.addEventListener('popstate', handlePopState);
-    
+
         return () => {
             window.removeEventListener('popstate', handlePopState);
         };
-    }, []);
+    }, [currentPage]);
 
     const handleDownloadCsv = async () => {
         try {
@@ -115,7 +115,6 @@ export default function InventoryDashboard({ auth }: PageProps) {
     };
 
     const normalizeSearchString = (str: string) => {
-
         if (!str) return "";
         return str.normalize("NFC").toUpperCase()
             .replace(/[Ａ-Ｚａ-ｚ０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
@@ -132,11 +131,10 @@ export default function InventoryDashboard({ auth }: PageProps) {
         setFilteredItems(filtered);
     }, [searchValue, items]);
 
-    const handlePageClick = (event: { selected: number }) => {
-        setCurrentPage(event.selected);
+    const handlePageClick = (page: number) => {
+        setCurrentPage(page);
     };
 
-    const pageCount = Math.ceil(filteredItems.length / itemsPerPage);
     const itemsDisplayed = filteredItems.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
 
     return (
@@ -233,13 +231,38 @@ export default function InventoryDashboard({ auth }: PageProps) {
                                         className="absolute top-0 right-0 p-2 text-lg font-bold"
                                         aria-label="Close"
                                     >
-                                    <FontAwesomeIcon icon={faXmark}/>
+                                        <FontAwesomeIcon icon={faXmark} />
                                     </button>
                                 </div>
                             </Modal>
                         </div>
                     </>
                 )}
+                <div className="flex justify-center mt-4">
+                    <button
+                        onClick={() => handlePageClick(currentPage - 1)}
+                        disabled={currentPage === 0}
+                        className="px-3 py-1 mx-1 bg-blue-500 text-white rounded disabled:opacity-50"
+                    >
+                        &lt;
+                    </button>
+                    {Array.from({ length: pageCount }, (_, index) => (
+                        <button
+                            key={index}
+                            onClick={() => handlePageClick(index)}
+                            className={`px-3 py-1 mx-1 ${index === currentPage ? 'bg-blue-700' : 'bg-blue-500'} text-white rounded`}
+                        >
+                            {index + 1}
+                        </button>
+                    ))}
+                    <button
+                        onClick={() => handlePageClick(currentPage + 1)}
+                        disabled={currentPage === pageCount - 1}
+                        className="px-3 py-1 mx-1 bg-blue-500 text-white rounded disabled:opacity-50"
+                    >
+                        &gt;
+                    </button>
+                </div>
                 <div className="p-6 text-white border-2 border-blue-500 p-4 mt-4 rounded">
                     リアルタイム通知履歴
                     {errorMessage && (
