@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Head } from '@inertiajs/react';
 import axios from 'axios';
 import { ThreeDots as Loader } from 'react-loader-spinner';
@@ -8,21 +8,22 @@ import { PageProps } from '@/types';
 import Modal from '@/Components/Modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter, faXmark } from '@fortawesome/free-solid-svg-icons';
-import { InventoryItem } from '@/types/inventoryItem';
-
+import { useInventoryDashboardState } from '@/hooks/InventoryItems';
 
 export default function InventoryDashboard({ auth }: PageProps) {
-    const [items, setItems] = useState<InventoryItem[]>([]);
-    const [filteredItems, setFilteredItems] = useState<InventoryItem[]>([]);
-    const [Loading, setLoading] = useState(false);
-    const [searchValue, setSearchValue] = useState('');
-    const [checkBox, setCheckBox] = useState<boolean[]>([]);
-    const [errorMessage, setErrorMessage] = useState('');
-    const [modalShow, setModalShow] = useState(false);
-    const [selectedRemark, setSelectedRemark] = useState('');
-    const [currentPage, setCurrentPage] = useState(0);
-    const [pageCount, setPageCount] = useState(0);
-    const itemsPerPage = 3; //表示件数
+    const {
+        items, setItems,
+        filteredItems, setFilteredItems,
+        loading, setLoading,
+        searchValue, setSearchValue,
+        checkBox, setCheckBox,
+        errorMessage, setErrorMessage,
+        modalShow, setModalShow,
+        selectedRemark, setSelectedRemark,
+        currentPage, setCurrentPage,
+        pageCount, setPageCount,
+        itemsPerPage
+    } = useInventoryDashboardState();
 
     // モーダルを開く関数
     const openModal = (remark: string) => {
@@ -39,9 +40,9 @@ export default function InventoryDashboard({ auth }: PageProps) {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`/api/items?page=${currentPage + 1}&per_page=${itemsPerPage}`);
-                setItems(prevItems => [...prevItems, ...response.data.data]);
-                setPageCount(response.data.last_page);
+                const response = await axios.get('/api/items');
+                setItems(response.data.data);
+                // Initialize checkBox state for each item
                 setCheckBox(new Array(response.data.data.length).fill(false));
             } catch (error) {
                 console.error('Error fetching items:', error);
@@ -49,24 +50,38 @@ export default function InventoryDashboard({ auth }: PageProps) {
             }
             setLoading(false);
         };
-
+    
         fetchData();
-
+    
         //ブラウザ戻る防止
         window.history.pushState(null, document.title, window.location.href);
         const handlePopState = () => {
             window.history.pushState(null, document.title, window.location.href);
         };
         window.addEventListener('popstate', handlePopState);
-
+    
         return () => {
             window.removeEventListener('popstate', handlePopState);
         };
-    }, [currentPage]);
+    }, []);
+    
+    useEffect(() => {
+        const normalizedSearchValue = normalizeSearchString(searchValue);
+        const filtered = items.filter(item =>
+            normalizeSearchString(item.productName).includes(normalizedSearchValue) ||
+            normalizeSearchString(item.modelNumber).includes(normalizedSearchValue) ||
+            normalizeSearchString(item.location).includes(normalizedSearchValue) ||
+            normalizeSearchString(item.remarks).includes(normalizedSearchValue)
+        );
+        setFilteredItems(filtered);
+        setPageCount(Math.ceil(filtered.length / itemsPerPage));
+        setCurrentPage(0); // Always reset to first page when filtering
+    }, [searchValue, items, itemsPerPage]);
+    
 
     const handleDownloadCsv = async () => {
         try {
-            const selectedIds = items.filter((_, index) => checkBox[index]).map(item => item.id);
+            const selectedIds = filteredItems.filter((_, index) => checkBox[index]).map(item => item.id);
             if (selectedIds.length === 0 || selectedIds.some(id => typeof id !== 'number')) {
                 setErrorMessage('エラー: 選択されたアイテムがありません。');
                 return;
@@ -111,23 +126,14 @@ export default function InventoryDashboard({ auth }: PageProps) {
             .replace(/[Ａ-Ｚａ-ｚ０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
     };
 
-    useEffect(() => {
-        const normalizedSearchValue = normalizeSearchString(searchValue);
-        const filtered = items.filter(item =>
-            normalizeSearchString(item.productName).includes(normalizedSearchValue) ||
-            normalizeSearchString(item.modelNumber).includes(normalizedSearchValue) ||
-            normalizeSearchString(item.location).includes(normalizedSearchValue) ||
-            normalizeSearchString(item.remarks).includes(normalizedSearchValue)
-        );
-        setFilteredItems(filtered);
-    }, [searchValue, items]);
-
     const handlePageClick = (page: number) => {
         setCurrentPage(page);
     };
+    const startIndex = currentPage * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const itemsDisplayed = filteredItems.slice(startIndex, endIndex);
 
-    const itemsDisplayed = filteredItems.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
-
+    console.log(startIndex);
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -147,12 +153,10 @@ export default function InventoryDashboard({ auth }: PageProps) {
                     <FontAwesomeIcon icon={faFilter} className='absolute right-3' />
                 </div>
 
-                {Loading ? (
-                    <>
-                        <div className="flex justify-center items-center">
-                            <Loader color="#00BFFF" height={80} width={80} />
-                        </div>
-                    </>
+                {loading ? (
+                    <div className="flex justify-center items-center">
+                        <Loader color="#00BFFF" height={80} width={80} />
+                    </div>
                 ) : (
                     <>
                         <div className="flex justify-end">
