@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { InventoryItem } from '@/types/inventoryItems';
 
-export const useInventoryDashboardState = () => {
+export const useInventoryItemState = () => {
     const [items, setItems] = useState<InventoryItem[]>([]);
     const [filteredItems, setFilteredItems] = useState<InventoryItem[]>([]);
     const [loading, setLoading] = useState(false);
