@@ -15,7 +15,7 @@ class ItemController extends Controller
      */
     public function index(Request $request)
     {
-        $perPage = $request->input('per_page', 5); //per_pageパラメータが提供されなかった場合に使用されるデフォルト値
+        $perPage = $request->input('per_page');
         $items = Item::paginate($perPage);
         return response()->json($items);
     }
