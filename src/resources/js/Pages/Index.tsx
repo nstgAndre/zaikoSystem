@@ -9,6 +9,7 @@ import Modal from '@/Components/Modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { useInventoryItemState } from '@/hooks/InventoryItems';
+import { InventoryItem } from '@/types/inventoryItems';
 
 export default function InventoryDashboard({ auth }: PageProps) {
     const {
@@ -41,8 +42,6 @@ export default function InventoryDashboard({ auth }: PageProps) {
             setLoading(true);
             try {
                 const response = await axios.get('/api/items');
-                setItems(response.data.data);
-                setItems(response.data.data);
                 setItems(response.data.data);
                 const checkBoxState = response.data.data.reduce((acc: { [key: string]: boolean }, item: InventoryItem) => {
                     acc[item.id] = false;
