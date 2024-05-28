@@ -6,7 +6,7 @@ export const useInventoryItemState = () => {
     const [filteredItems, setFilteredItems] = useState<InventoryItem[]>([]);
     const [loading, setLoading] = useState(false);
     const [searchValue, setSearchValue] = useState('');
-    const [checkBox, setCheckBox] = useState<boolean[]>([]);
+    const [checkBox, setCheckBox] = useState<{ [key: string]: boolean }>({});
     const [errorMessage, setErrorMessage] = useState('');
     const [modalShow, setModalShow] = useState(false);
     const [selectedRemark, setSelectedRemark] = useState('');
