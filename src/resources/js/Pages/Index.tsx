@@ -8,7 +8,7 @@ import { PageProps } from '@/types';
 import Modal from '@/Components/Modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter, faXmark } from '@fortawesome/free-solid-svg-icons';
-import { useInventoryDashboardState } from '@/hooks/InventoryItems';
+import { useInventoryItemState } from '@/hooks/InventoryItems';
 
 export default function InventoryDashboard({ auth }: PageProps) {
     const {
@@ -23,7 +23,7 @@ export default function InventoryDashboard({ auth }: PageProps) {
         currentPage, setCurrentPage,
         pageCount, setPageCount,
         itemsPerPage
-    } = useInventoryDashboardState();
+    } = useInventoryItemState();
 
     // モーダルを開く関数
     const openModal = (remark: string) => {
@@ -42,7 +42,6 @@ export default function InventoryDashboard({ auth }: PageProps) {
             try {
                 const response = await axios.get('/api/items');
                 setItems(response.data.data);
-                // Initialize checkBox state for each item
                 setCheckBox(new Array(response.data.data.length).fill(false));
             } catch (error) {
                 console.error('Error fetching items:', error);
@@ -52,6 +51,7 @@ export default function InventoryDashboard({ auth }: PageProps) {
         };
     
         fetchData();
+
     
         //ブラウザ戻る防止
         window.history.pushState(null, document.title, window.location.href);
@@ -75,14 +75,19 @@ export default function InventoryDashboard({ auth }: PageProps) {
         );
         setFilteredItems(filtered);
         setPageCount(Math.ceil(filtered.length / itemsPerPage));
-        setCurrentPage(0); // Always reset to first page when filtering
+        setCurrentPage(0);
     }, [searchValue, items, itemsPerPage]);
     
 
     const handleDownloadCsv = async () => {
         try {
-            const selectedIds = filteredItems.filter((_, index) => checkBox[index]).map(item => item.id);
-            if (selectedIds.length === 0 || selectedIds.some(id => typeof id !== 'number')) {
+            const startIndex = currentPage * itemsPerPage;
+            const selectedIds = items
+                .slice(startIndex, startIndex + itemsPerPage)
+                .filter((_, index) => checkBox[startIndex + index])
+                .map(item => item.id);
+    
+            if (selectedIds.length === 0) {
                 setErrorMessage('エラー: 選択されたアイテムがありません。');
                 return;
             }
@@ -103,16 +108,12 @@ export default function InventoryDashboard({ auth }: PageProps) {
             link.click();
             if (link.parentNode) {
                 link.parentNode.removeChild(link);
+                setErrorMessage('');
             }
             setErrorMessage('');
         } catch (error) {
             console.error('Error downloading the CSV file:', error);
-            const typedError = error as { response?: { data?: { error?: string } } };
-            if (typedError.response && typedError.response.data && typedError.response.data.error) {
-                setErrorMessage(typedError.response.data.error);
-            } else {
-                setErrorMessage('ダウンロード中に未知のエラーが発生しました。');
-            }
+            setErrorMessage('ダウンロード中に未知のエラーが発生しました。');
         }
     };
 
@@ -133,7 +134,6 @@ export default function InventoryDashboard({ auth }: PageProps) {
     const endIndex = startIndex + itemsPerPage;
     const itemsDisplayed = filteredItems.slice(startIndex, endIndex);
 
-    console.log(startIndex);
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -152,7 +152,6 @@ export default function InventoryDashboard({ auth }: PageProps) {
                     />
                     <FontAwesomeIcon icon={faFilter} className='absolute right-3' />
                 </div>
-
                 {loading ? (
                     <div className="flex justify-center items-center">
                         <Loader color="#00BFFF" height={80} width={80} />
@@ -193,10 +192,10 @@ export default function InventoryDashboard({ auth }: PageProps) {
                                                 <input
                                                     type='checkbox'
                                                     className='border-lightblue bg-deepblue'
-                                                    checked={checkBox[index]}
+                                                    checked={checkBox[currentPage * itemsPerPage + index]}
                                                     onChange={() => {
                                                         const newCheckBox = [...checkBox];
-                                                        newCheckBox[index] = !newCheckBox[index];
+                                                        newCheckBox[currentPage * itemsPerPage + index] = !newCheckBox[currentPage * itemsPerPage + index];
                                                         setCheckBox(newCheckBox);
                                                     }}
                                                 />
