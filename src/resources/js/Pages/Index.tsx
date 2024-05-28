@@ -42,29 +42,41 @@ export default function InventoryDashboard({ auth }: PageProps) {
             try {
                 const response = await axios.get('/api/items');
                 setItems(response.data.data);
-                setCheckBox(new Array(response.data.data.length).fill(false));
+                setItems(response.data.data);
+                setItems(response.data.data);
+                const checkBoxState = response.data.data.reduce((acc: { [key: string]: boolean }, item: InventoryItem) => {
+                    acc[item.id] = false;
+                    return acc;
+                }, {});
+                setCheckBox(checkBoxState);
             } catch (error) {
                 console.error('Error fetching items:', error);
                 setErrorMessage('アイテムの取得中にエラーが発生しました。');
             }
             setLoading(false);
         };
-    
+
         fetchData();
 
-    
+
         //ブラウザ戻る防止
         window.history.pushState(null, document.title, window.location.href);
         const handlePopState = () => {
             window.history.pushState(null, document.title, window.location.href);
         };
         window.addEventListener('popstate', handlePopState);
-    
+
         return () => {
             window.removeEventListener('popstate', handlePopState);
         };
     }, []);
-    
+    //絞り込み対象文字
+    const normalizeSearchString = (str: string) => {
+        if (!str) return "";
+        return str.normalize("NFC").toUpperCase()
+            .replace(/[Ａ-Ｚａ-ｚ０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
+    };
+
     useEffect(() => {
         const normalizedSearchValue = normalizeSearchString(searchValue);
         const filtered = items.filter(item =>
@@ -77,16 +89,11 @@ export default function InventoryDashboard({ auth }: PageProps) {
         setPageCount(Math.ceil(filtered.length / itemsPerPage));
         setCurrentPage(0);
     }, [searchValue, items, itemsPerPage]);
-    
 
     const handleDownloadCsv = async () => {
         try {
-            const startIndex = currentPage * itemsPerPage;
-            const selectedIds = items
-                .slice(startIndex, startIndex + itemsPerPage)
-                .filter((_, index) => checkBox[startIndex + index])
-                .map(item => item.id);
-    
+            const selectedIds = Object.keys(checkBox).filter(key => checkBox[key]);
+
             if (selectedIds.length === 0) {
                 setErrorMessage('エラー: 選択されたアイテムがありません。');
                 return;
@@ -108,7 +115,6 @@ export default function InventoryDashboard({ auth }: PageProps) {
             link.click();
             if (link.parentNode) {
                 link.parentNode.removeChild(link);
-                setErrorMessage('');
             }
             setErrorMessage('');
         } catch (error) {
@@ -118,13 +124,11 @@ export default function InventoryDashboard({ auth }: PageProps) {
     };
 
     const handleMasterCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setCheckBox(new Array(checkBox.length).fill(e.target.checked));
-    };
-
-    const normalizeSearchString = (str: string) => {
-        if (!str) return "";
-        return str.normalize("NFC").toUpperCase()
-            .replace(/[Ａ-Ｚａ-ｚ０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
+        const newCheckState = Object.keys(checkBox).reduce((acc, key) => {
+            acc[key] = e.target.checked;
+            return acc;
+        }, {} as { [key: string]: boolean });
+        setCheckBox(newCheckState);
     };
 
     const handlePageClick = (page: number) => {
@@ -192,11 +196,9 @@ export default function InventoryDashboard({ auth }: PageProps) {
                                                 <input
                                                     type='checkbox'
                                                     className='border-lightblue bg-deepblue'
-                                                    checked={checkBox[currentPage * itemsPerPage + index]}
+                                                    checked={checkBox[item.id] || false}
                                                     onChange={() => {
-                                                        const newCheckBox = [...checkBox];
-                                                        newCheckBox[currentPage * itemsPerPage + index] = !newCheckBox[currentPage * itemsPerPage + index];
-                                                        setCheckBox(newCheckBox);
+                                                        setCheckBox(prev => ({ ...prev, [item.id]: !prev[item.id] }));
                                                     }}
                                                 />
                                             </td>
