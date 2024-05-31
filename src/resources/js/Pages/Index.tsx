@@ -1,4 +1,4 @@
-// import React from 'react';
+import React, { useState } from 'react';
 import { Head } from '@inertiajs/react';
 import { ThreeDots as Loader } from 'react-loader-spinner';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
@@ -33,11 +33,14 @@ export default function InventoryDashboard({ auth }: PageProps) {
         handleDownloadCsv
     } = useDownloadCsv(checkBox, setCheckBox);
 
+    //PaginateSerachFilter.tsxと名前が被るためindexで定義
+    const [searchValue, setSearchValue] = useState('');
+
     const {
         currentPage,
         pageCount,
         itemsDisplayed, handlePageClick
-    } = usePagenateSearchFilter({ items, searchValue: '' });
+    } = usePagenateSearchFilter({ items, searchValue });
 
     const { handleMasterCheckboxChange } = useMasterCheckbox(checkBox, setCheckBox);
 
@@ -54,8 +57,8 @@ export default function InventoryDashboard({ auth }: PageProps) {
                         className="w-full pl-4 pr-4 py-2 rounded-lg"
                         type="text"
                         placeholder="検索する文字を入力してください"
-                        value=""
-                        onChange={e => {}}
+                        value={searchValue}
+                        onChange={e => setSearchValue(e.target.value)}
                     />
                     <FontAwesomeIcon icon={faFilter} className='absolute right-3' />
                 </div>
