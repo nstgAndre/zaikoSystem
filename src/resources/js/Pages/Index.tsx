@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import { Head } from '@inertiajs/react';
-import axios from 'axios';
 import { ThreeDots as Loader } from 'react-loader-spinner';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import DangerButton from '@/Components/DangerButton';
@@ -8,134 +7,42 @@ import { PageProps } from '@/types';
 import Modal from '@/Components/Modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter, faXmark } from '@fortawesome/free-solid-svg-icons';
-import { useInventoryItemState } from '@/hooks/InventoryItems';
-import { InventoryItem } from '@/types/inventoryItems';
+// import { useInventoryItemState } from '@/hooks/InventoryItems';
+// import { InventoryItem } from '@/types/inventoryItems';
+import { useFetchItemsData } from '@/features/FetchItemsData';
+import { useModalRemark } from '@/features/ModalRemark';
+import { useDownloadCsv } from '@/features/DownloadCsv';
+import { usePagenateSearchFilter } from '@/features/PagenateSearchFilter';
+import { useMasterCheckbox } from '@/features/MasterCheckbox';
 
 export default function InventoryDashboard({ auth }: PageProps) {
     const {
-        items, setItems,
-        filteredItems, setFilteredItems,
-        loading, setLoading,
-        searchValue, setSearchValue,
+        items,
+        loading,
         checkBox, setCheckBox,
-        errorMessage, setErrorMessage,
-        modalShow, setModalShow,
-        selectedRemark, setSelectedRemark,
-        currentPage, setCurrentPage,
-        pageCount, setPageCount,
-        itemsPerPage
-    } = useInventoryItemState();
+        errorMessage
+    } = useFetchItemsData();
 
-    // モーダルを開く関数
-    const openModal = (remark: string) => {
-        setSelectedRemark(remark);
-        setModalShow(true);
-    };
+    const {
+        modalShow,
+        selectedRemark,
+        openModal, closeModal
+    } = useModalRemark();
 
-    // モーダルを閉じる関数
-    const closeModal = () => {
-        setModalShow(false);
-    };
+    const {
+        handleDownloadCsv
+    } = useDownloadCsv(checkBox, setCheckBox);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                const response = await axios.get('/api/items');
-                setItems(response.data.data);
-                const checkBoxState = response.data.data.reduce((acc: { [key: string]: boolean }, item: InventoryItem) => {
-                    acc[item.id] = false;
-                    return acc;
-                }, {});
-                setCheckBox(checkBoxState);
-            } catch (error) {
-                console.error('Error fetching items:', error);
-                setErrorMessage('アイテムの取得中にエラーが発生しました。');
-            }
-            setLoading(false);
-        };
+    //PaginateSerachFilter.tsxと名前が被るためindexで定義
+    const [searchValue, setSearchValue] = useState('');
 
-        fetchData();
+    const {
+        currentPage,
+        pageCount,
+        itemsDisplayed, handlePageClick
+    } = usePagenateSearchFilter({ items, searchValue });
 
-
-        //ブラウザ戻る防止
-        window.history.pushState(null, document.title, window.location.href);
-        const handlePopState = () => {
-            window.history.pushState(null, document.title, window.location.href);
-        };
-        window.addEventListener('popstate', handlePopState);
-
-        return () => {
-            window.removeEventListener('popstate', handlePopState);
-        };
-    }, []);
-    //絞り込み対象文字
-    const normalizeSearchString = (str: string) => {
-        if (!str) return "";
-        return str.normalize("NFC").toUpperCase()
-            .replace(/[Ａ-Ｚａ-ｚ０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
-    };
-
-    useEffect(() => {
-        const normalizedSearchValue = normalizeSearchString(searchValue);
-        const filtered = items.filter(item =>
-            normalizeSearchString(item.productName).includes(normalizedSearchValue) ||
-            normalizeSearchString(item.modelNumber).includes(normalizedSearchValue) ||
-            normalizeSearchString(item.location).includes(normalizedSearchValue) ||
-            normalizeSearchString(item.remarks).includes(normalizedSearchValue)
-        );
-        setFilteredItems(filtered);
-        setPageCount(Math.ceil(filtered.length / itemsPerPage));
-        setCurrentPage(0);
-    }, [searchValue, items, itemsPerPage]);
-
-    const handleDownloadCsv = async () => {
-        try {
-            const selectedIds = Object.keys(checkBox).filter(key => checkBox[key]);
-
-            if (selectedIds.length === 0) {
-                setErrorMessage('エラー: 選択されたアイテムがありません。');
-                return;
-            }
-            const response = await axios({
-                url: '/api/items/csv',
-                method: 'POST',
-                responseType: 'blob',
-                data: { ids: selectedIds },
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', 'items.csv');
-            document.body.appendChild(link);
-            link.click();
-            if (link.parentNode) {
-                link.parentNode.removeChild(link);
-            }
-            setErrorMessage('');
-        } catch (error) {
-            console.error('Error downloading the CSV file:', error);
-            setErrorMessage('ダウンロード中に未知のエラーが発生しました。');
-        }
-    };
-
-    const handleMasterCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newCheckState = Object.keys(checkBox).reduce((acc, key) => {
-            acc[key] = e.target.checked;
-            return acc;
-        }, {} as { [key: string]: boolean });
-        setCheckBox(newCheckState);
-    };
-
-    const handlePageClick = (page: number) => {
-        setCurrentPage(page);
-    };
-    const startIndex = currentPage * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const itemsDisplayed = filteredItems.slice(startIndex, endIndex);
+    const { handleMasterCheckboxChange } = useMasterCheckbox(checkBox, setCheckBox);
 
     return (
         <AuthenticatedLayout
