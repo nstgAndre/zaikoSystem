@@ -10,7 +10,7 @@ export const usePagenateSearchFilter = ({ items, searchValue }: Props) => {
     const [filteredItems, setFilteredItems] = useState<InventoryItem[]>([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [pageCount, setPageCount] = useState(0);
-    const itemsPerPage = 3;
+    const itemsPerPage = 3; //1ページあたりの表示数
 
     const normalizeSearchString = (str: string) => {
         if (!str) return "";

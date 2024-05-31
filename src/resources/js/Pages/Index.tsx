@@ -30,7 +30,8 @@ export default function InventoryDashboard({ auth }: PageProps) {
     } = useModalRemark();
 
     const {
-        handleDownloadCsv
+        handleDownloadCsv,
+        errorMessage: downloadCsvError
     } = useDownloadCsv(checkBox, setCheckBox);
 
     //PaginateSerachFilter.tsxと名前が被るためindexで定義
@@ -167,9 +168,9 @@ export default function InventoryDashboard({ auth }: PageProps) {
                 </div>
                 <div className="p-6 text-white border-2 border-blue-500 p-4 mt-4 rounded">
                     リアルタイム通知履歴
-                    {errorMessage && (
+                    {{downloadCsvError} && (
                         <div className="mt-2 text-red-500">
-                            {errorMessage}
+                            {downloadCsvError}
                         </div>
                     )}
                 </div>

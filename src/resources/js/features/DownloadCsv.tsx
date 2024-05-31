@@ -36,5 +36,5 @@ export const useDownloadCsv = (checkBox: { [key: string]: boolean }, setCheckBox
         }
     };
 
-    return { errorMessage, setErrorMessage, handleDownloadCsv };
+    return { errorMessage, handleDownloadCsv };
 };
