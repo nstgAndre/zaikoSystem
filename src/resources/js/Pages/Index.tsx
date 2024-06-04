@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Head } from '@inertiajs/react';
 import { ThreeDots as Loader } from 'react-loader-spinner';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
@@ -97,7 +97,7 @@ export default function InventoryDashboard({ auth }: PageProps) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {itemsDisplayed.map((item, index) => (
+                                    {itemsDisplayed.map((item) => (
                                         <tr key={item.id} className=' mt-4 mr-2 ml-2 mb-2 grid grid-cols-9 text-white border-2 border-lightblue rounded-md'>
                                             <td className='py-3 text-center'>
                                                 <input
