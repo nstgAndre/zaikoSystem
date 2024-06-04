@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import axios from 'axios';
 // import { Inertia } from '@inertiajs/inertia';
 
-interface BulkAddResponse {
-    success: boolean;
-    message: string;
-}
+// interface BulkAddResponse {
+//     success: boolean;
+//     message: string;
+// }
 
 export const useBulkData =() => {
     const [bulkData, setBulkData] = useState('');
@@ -23,5 +23,5 @@ export const useBulkData =() => {
     };
 
     return { bulkData, setBulkData, handleSubmit };
-
+  
 }
