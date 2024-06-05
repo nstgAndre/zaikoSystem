@@ -1,14 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from 'axios';
-// import { Inertia } from '@inertiajs/inertia';
+import { useInventoryItemState } from '@/hooks/InventoryItems';
 
-interface BulkAddResponse {
-    success: boolean;
-    message: string;
-}
 
 export const useBulkData =() => {
-    const [bulkData, setBulkData] = useState('');
+    const {bulkData, setBulkData} = useInventoryItemState();
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();

@@ -1,9 +1,10 @@
 import { useState } from 'react';
+import { useInventoryItemState } from '@/hooks/InventoryItems';
 
 export const useModalRemark = () => {
-    const [modalShow, setModalShow] = useState(false);
-    const [selectedRemark, setSelectedRemark] = useState('');
-
+    const {modalShow, setModalShow} = useInventoryItemState();
+    const {selectedRemark, setSelectedRemark} = useInventoryItemState();
+    
     const openModal = (remark: string) => {
         setSelectedRemark(remark);
         setModalShow(true);

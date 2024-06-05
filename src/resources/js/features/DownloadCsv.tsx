@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { useState } from 'react';
+import { useInventoryItemState } from '@/hooks/InventoryItems';
 
 export const useDownloadCsv = (checkBox: { [key: string]: boolean }, setCheckBox: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>) => {
-    const [errorMessage, setErrorMessage] = useState('');
+    const {errorMessage, setErrorMessage} = useInventoryItemState();
 
     const handleDownloadCsv = async () => {
         try {
