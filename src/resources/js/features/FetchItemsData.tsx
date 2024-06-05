@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import axios from 'axios';
 import { InventoryItem } from '@/types/inventoryItems';
+import { useInventoryItemState } from '@/hooks/InventoryItems';
 
 export const useFetchItemsData = () => {
 
-    const [loading, setLoading] = useState(false);
-    const [items, setItems] = useState<InventoryItem[]>([]);
-    const [checkBox, setCheckBox] = useState<{ [key: string]: boolean }>({});
-    const [errorMessage, setErrorMessage] = useState('');
+    const {loading, setLoading} = useInventoryItemState();
+    const {items, setItems} = useInventoryItemState();;
+    const {checkBox, setCheckBox} = useInventoryItemState();
+    const {errorMessage, setErrorMessage} = useInventoryItemState();
 
     useEffect(() => {
         const fetchData = async () => {

@@ -1,5 +1,5 @@
 import React from 'react';
-// import { useState } from 'react';
+
 
 export const useMasterCheckbox = (checkBox: { [key: string]: boolean }, setCheckBox: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>) => {
     const handleMasterCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {

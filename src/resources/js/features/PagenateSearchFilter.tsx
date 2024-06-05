@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { InventoryItem } from '@/types/inventoryItems';
+import { useInventoryItemState } from '@/hooks/InventoryItems';
 
 interface Props {
     items: InventoryItem[];
@@ -7,10 +8,10 @@ interface Props {
 }
 
 export const usePagenateSearchFilter = ({ items, searchValue }: Props) => {
-    const [filteredItems, setFilteredItems] = useState<InventoryItem[]>([]);
-    const [currentPage, setCurrentPage] = useState(0);
-    const [pageCount, setPageCount] = useState(0);
-    const itemsPerPage = 3; //1ページあたりの表示数
+    const {filteredItems, setFilteredItems} = useInventoryItemState();
+    const {currentPage, setCurrentPage} = useInventoryItemState();
+    const {pageCount, setPageCount} = useInventoryItemState();
+    const {itemsPerPage} = useInventoryItemState();
 
     const normalizeSearchString = (str: string) => {
         if (!str) return "";
