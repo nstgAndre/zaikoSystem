@@ -3,6 +3,11 @@ import axios from 'axios';
 import { useInventoryItemState } from '@/hooks/InventoryItems';
 
 export const useBulkData = () => {
+// interface BulkAddResponse {
+//     success: boolean;
+//     message: string;
+// }
+
     const {bulkData, setBulkData} = useInventoryItemState();
     const [successMessage, setSuccessMessage] = useState('');
 
