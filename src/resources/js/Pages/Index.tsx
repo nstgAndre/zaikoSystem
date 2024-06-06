@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Head } from '@inertiajs/react';
 import { ThreeDots as Loader } from 'react-loader-spinner';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
@@ -7,13 +6,13 @@ import { PageProps } from '@/types';
 import Modal from '@/Components/Modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter, faXmark } from '@fortawesome/free-solid-svg-icons';
-// import { useInventoryItemState } from '@/hooks/InventoryItems';
-// import { InventoryItem } from '@/types/inventoryItems';
+import { useInventoryItemState } from '@/hooks/InventoryItems';
 import { useFetchItemsData } from '@/features/FetchItemsData';
 import { useModalRemark } from '@/features/ModalRemark';
 import { useDownloadCsv } from '@/features/DownloadCsv';
 import { usePagenateSearchFilter } from '@/features/PagenateSearchFilter';
 import { useMasterCheckbox } from '@/features/MasterCheckbox';
+import StorageRegister from '@/Components/StorageRegister';
 
 export default function InventoryDashboard({ auth }: PageProps) {
     const {
@@ -34,8 +33,7 @@ export default function InventoryDashboard({ auth }: PageProps) {
         errorMessage: downloadCsvError
     } = useDownloadCsv(checkBox, setCheckBox);
 
-    //PaginateSerachFilter.tsxと名前が被るためindexで定義
-    const [searchValue, setSearchValue] = useState('');
+    const { searchValue, setSearchValue } = useInventoryItemState();
 
     const {
         currentPage,
@@ -44,6 +42,9 @@ export default function InventoryDashboard({ auth }: PageProps) {
     } = usePagenateSearchFilter({ items, searchValue });
 
     const { handleMasterCheckboxChange } = useMasterCheckbox(checkBox, setCheckBox);
+
+    // 入庫記録モーダルの状態管理
+    const { showRegisterModal, setShowRegisterModal } = useInventoryItemState();
 
     return (
         <AuthenticatedLayout
@@ -69,11 +70,17 @@ export default function InventoryDashboard({ auth }: PageProps) {
                     </div>
                 ) : (
                     <>
-                        <div className="flex justify-end">
+                        <div className="flex justify-end space-x-4">
+                            <DangerButton onClick={() => setShowRegisterModal(true)} className="text-white border-2 !bg-deepblue !border-lightblue rounded-md mb-2 !focus:ring-blue-500">
+                                入庫記録
+                            </DangerButton>
                             <DangerButton onClick={handleDownloadCsv} className="text-white border-2 !bg-deepblue !border-lightblue rounded-md mb-2 !focus:ring-blue-500">
                                 CSVダウンロード
                             </DangerButton>
                         </div>
+
+                        <StorageRegister isOpen={showRegisterModal} onClose={() => setShowRegisterModal(false)} />
+
 
                         <div className="overflow-hidden shadow-sm sm:rounded-lg">
                             <table className="w-full border-4 border-lightblue bg-deepblue">
@@ -168,7 +175,7 @@ export default function InventoryDashboard({ auth }: PageProps) {
                 </div>
                 <div className="p-6 text-white border-2 border-blue-500 p-4 mt-4 rounded">
                     リアルタイム通知履歴
-                    {{downloadCsvError} && (
+                    {{ downloadCsvError } && (
                         <div className="mt-2 text-red-500">
                             {downloadCsvError}
                         </div>

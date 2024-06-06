@@ -166,4 +166,20 @@ class ItemController extends Controller
             ->header('Content-Disposition', 'attachment; filename="'.$filename.'"');
     }
 
+    public function insItemBulk(Request $request)
+    {
+        $items = $request->input('items', []);
+        foreach ($items as $itemData) {
+            $item = new Item();
+            $item->productName = $itemData['productName'];
+            $item->modelNumber = $itemData['modelNumber'];
+            $item->location = $itemData['location'];
+            $item->inItem = $itemData['inItem'];
+            $item->inventoryItem = $itemData['inItem'];
+            $item->remarks = $itemData['remarks'];
+            $item->save();
+        }
+        return response()->json(['success' => 'アイテムが正常に登録されました。']);
+    }
+
 }
