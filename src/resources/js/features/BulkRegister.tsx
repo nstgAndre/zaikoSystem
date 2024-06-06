@@ -1,27 +1,29 @@
-import { useState } from "react";
+import { useState } from 'react';
 import axios from 'axios';
 import { useInventoryItemState } from '@/hooks/InventoryItems';
 
+export const useBulkData = () => {
 // interface BulkAddResponse {
 //     success: boolean;
 //     message: string;
 // }
 
-export const useBulkData =() => {
     const {bulkData, setBulkData} = useInventoryItemState();
+    const [successMessage, setSuccessMessage] = useState('');
 
-    const handleSubmit = (event: React.FormEvent) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const items = bulkData.split('、').map(item => item.trim());
-        axios.post('/api/items/bulk', { items })
-            .then(response => {
-                console.log('Success:', response.data);
-            })
-            .catch(error => {
-                console.error('Error:', error);
+        try {
+            const items = bulkData.split('\n').map(item => {
+                const [productName, modelNumber, location, inItem, remarks] = item.split(',').map(part => part.trim());
+                return { productName, modelNumber, location, inItem: parseInt(inItem), remarks };
             });
+            const response = await axios.post('/api/items/bulk', { items });
+            setSuccessMessage(response.data.success);
+        } catch (error) {
+            console.error('Error posting bulk items:', error);
+        }
     };
 
-    return { bulkData, setBulkData, handleSubmit };
-  
-}
+    return { bulkData, setBulkData, handleSubmit, successMessage};
+};

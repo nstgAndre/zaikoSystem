@@ -57,6 +57,12 @@ Route::middleware('auth')->group(function () {
 Route::post('/api/items/csv', [ItemController::class, 'csv']);
 });
 
+//一括
+Route::middleware('auth')->group(function () {
+    Route::post('/api/items/bulk', [ItemController::class, 'insItemBulk']);
+    });
+
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
