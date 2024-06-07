@@ -15,18 +15,14 @@ export default function Authenticated({ user, header, children }: PropsWithChild
                 <div className="max-w-1xl mx-auto px-4 sm:px-6 lg:px-8 ml-0">
                     <div className="flex justify-between h-16">
                         <div className="flex">
-                        <div className="shrink-0 flex items-center">
+                            <div className="shrink-0 flex items-center">
                                 <Link href={route('index')}>
                                     <img src="/images/在庫管理最新.png" alt="在庫管理" className="block h-40 w-[180px] " />
                                 </Link>
-                        </div>
+                            </div>
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink href={route('index')} active={route().current('index')} className="text-white">
                                     在庫一覧
-                                </NavLink>
-
-                                <NavLink href={route('DeliverRegister')} active={route().current('DeliverRegister')} className="text-white">
-                                    出庫登録
                                 </NavLink>
                             </div>
                         </div>
@@ -117,10 +113,10 @@ export default function Authenticated({ user, header, children }: PropsWithChild
                     </div>
                 </div>
             </nav>
-            
+
             {header && (
                 <header className="bg-deepblue shadow">
-                    
+
                     <div className="max-w-1xl mx-auto  py-8 pb-1 sm:px-6 lg:px-8">{header}</div>
                 </header>
             )}

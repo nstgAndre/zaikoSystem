@@ -74,6 +74,9 @@ export default function InventoryDashboard({ auth }: PageProps) {
                             <DangerButton onClick={() => setShowRegisterModal(true)} className="text-white border-2 !bg-deepblue !border-lightblue rounded-md mb-2 !focus:ring-blue-500">
                                 入庫記録
                             </DangerButton>
+                            <DangerButton onClick={() => setShowRegisterModal(true)} className="text-white border-2 !bg-deepblue !border-lightblue rounded-md mb-2 !focus:ring-blue-500">
+                                出庫記録
+                            </DangerButton>
                             <DangerButton onClick={handleDownloadCsv} className="text-white border-2 !bg-deepblue !border-lightblue rounded-md mb-2 !focus:ring-blue-500">
                                 CSVダウンロード
                             </DangerButton>
