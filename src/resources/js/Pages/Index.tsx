@@ -13,6 +13,9 @@ import { useDownloadCsv } from '@/features/DownloadCsv';
 import { usePagenateSearchFilter } from '@/features/PagenateSearchFilter';
 import { useMasterCheckbox } from '@/features/MasterCheckbox';
 import StorageRegister from '@/Components/StorageRegister';
+import Test from '@/Components/test';
+import React, { useEffect } from 'react';
+
 
 export default function InventoryDashboard({ auth }: PageProps) {
     const {
@@ -44,7 +47,13 @@ export default function InventoryDashboard({ auth }: PageProps) {
     const { handleMasterCheckboxChange } = useMasterCheckbox(checkBox, setCheckBox);
 
     // 入庫記録モーダルの状態管理
-    const { showRegisterModal, setShowRegisterModal } = useInventoryItemState();
+    const { showRegisterModal, setShowRegisterModal, showTestComponent, setShowTestComponent } = useInventoryItemState();
+
+    useEffect(() => {
+        setShowTestComponent(true);
+    }, [checkBox, setShowTestComponent]);
+
+    const history = useHistory();
 
     return (
         <AuthenticatedLayout
@@ -70,18 +79,23 @@ export default function InventoryDashboard({ auth }: PageProps) {
                     </div>
                 ) : (
                     <>
-                        <div className="flex justify-end space-x-4">
-                            <DangerButton onClick={() => setShowRegisterModal(true)} className="text-white border-2 !bg-deepblue !border-lightblue rounded-md mb-2 !focus:ring-blue-500">
-                                入庫記録
-                            </DangerButton>
-                            <DangerButton onClick={handleDownloadCsv} className="text-white border-2 !bg-deepblue !border-lightblue rounded-md mb-2 !focus:ring-blue-500">
-                                CSVダウンロード
-                            </DangerButton>
-                        </div>
-
-                        <StorageRegister isOpen={showRegisterModal} onClose={() => setShowRegisterModal(false)} />
-
-
+                        <div>
+            <div className="flex justify-end space-x-4">
+                <DangerButton onClick={() => setShowRegisterModal(true)} className="text-white border-2 !bg-deepblue !border-lightblue rounded-md mb-2 !focus:ring-blue-500">
+                    入庫記録
+                </DangerButton>
+                <DangerButton onClick={() => setShowTestComponent(true)} className="text-white border-2 !bg-deepblue !border-lightblue rounded-md mb-2 !focus:ring-blue-500">
+                    出庫登録
+                </DangerButton>
+                <DangerButton onClick={handleDownloadCsv} className="text-white border-2 !bg-deepblue !border-lightblue rounded-md mb-2 !focus:ring-blue-500">
+                    CSVダウンロード
+                </DangerButton>
+            </div>
+            <StorageRegister isOpen={showRegisterModal} onClose={() => setShowRegisterModal(false)} />
+             {showTestComponent && (
+                <Test isOpen={showTestComponent} onClose={() => setShowTestComponent(false)} />
+            )}
+            </div>
                         <div className="overflow-hidden shadow-sm sm:rounded-lg">
                             <table className="w-full border-4 border-lightblue bg-deepblue">
                                 <thead>

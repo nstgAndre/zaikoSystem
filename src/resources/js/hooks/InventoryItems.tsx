@@ -16,6 +16,7 @@ export const useInventoryItemState = () => {
     const itemsPerPage = 3;
     const [bulkData, setBulkData] = useState('');
     const [showRegisterModal, setShowRegisterModal] = useState(false);
+    const [showTestComponent, setShowTestComponent] = useState(false); 
 
     return {
         items, setItems,
@@ -27,6 +28,7 @@ export const useInventoryItemState = () => {
         successMessage, setSuccessMessage,
         modalShow, setModalShow,
         showRegisterModal, setShowRegisterModal,
+        showTestComponent, setShowTestComponent,
         selectedRemark, setSelectedRemark,
         currentPage, setCurrentPage,
         pageCount, setPageCount,
