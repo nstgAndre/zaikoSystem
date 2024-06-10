@@ -10,11 +10,9 @@ const Test: React.FC<TestProps> = ({ isOpen, onClose, onUpdate }) => {
     return (
         <div className="overflow-hidden shadow-sm sm:rounded-lg">
             <div className="mb-2 flex justify-end">
-                {/* 更新ボタンを追加 */}
                 <button className="text-white bg-green-500 px-4 py-2 rounded-md mr-2" onClick={onUpdate}>
                     更新
                 </button>
-                {/* 閉じるボタンは以前と同じ */}
                 <button className="text-white bg-gold px-4 py-2 rounded-md" onClick={onClose}>
                     閉じる
                 </button>
