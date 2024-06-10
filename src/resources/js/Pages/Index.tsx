@@ -52,8 +52,7 @@ export default function InventoryDashboard({ auth }: PageProps) {
     useEffect(() => {
         setShowTestComponent(true);
     }, [checkBox, setShowTestComponent]);
-
-    const history = useHistory();
+    
 
     return (
         <AuthenticatedLayout
