@@ -6,7 +6,6 @@ interface StorageRegisterProps {
     onClose: () => void;
 }
 
-
 const StorageRegister: React.FC<StorageRegisterProps> = ({ isOpen, onClose }) => {
     const { bulkData, setBulkData,  successMessage} = useBulkData();
 
