@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { useInventoryItemState } from '@/hooks/InventoryItems';
-import react { useState }
 
 export const useBulkData = () => {
 // interface BulkAddResponse {
