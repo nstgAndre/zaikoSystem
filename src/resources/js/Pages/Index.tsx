@@ -1,19 +1,20 @@
 import { Head } from '@inertiajs/react';
+import React from 'react';
 import { ThreeDots as Loader } from 'react-loader-spinner';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import DangerButton from '@/Components/DangerButton';
 import { PageProps } from '@/types';
 import Modal from '@/Components/Modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFilter, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import { useInventoryItemState } from '@/hooks/InventoryItems';
-import { useFetchItemsData } from '@/features/FetchItemsData';
+import { useFetchItemsData } from '@/functions/FetchItemsData';
 import { useModalRemark } from '@/features/ModalRemark';
 import { useDownloadCsv } from '@/features/DownloadCsv';
 import { usePagenateSearchFilter } from '@/features/PagenateSearchFilter';
 import { useMasterCheckbox } from '@/features/MasterCheckbox';
-import StorageRegister from '@/Components/StorageRegister';
-import DeliverRegister from '@/Components/DeliverRegister';
+import StorageRegister from '@/Pages/Layouts/StorageRegister';
+import DeliverRegister from '@/Pages/Layouts/DeliverRegister';
 
 
 export default function InventoryDashboard({ auth }: PageProps) {
@@ -27,12 +28,12 @@ export default function InventoryDashboard({ auth }: PageProps) {
             setShowStockModal
         } = useInventoryItemState();
 
-    const {
-        items,
-        loading,
-        checkBox, setCheckBox,
-        errorMessage
-    } = useFetchItemsData();
+        const {
+            items,
+            loading,
+            checkBox, setCheckBox,
+            errorMessage
+        } = useFetchItemsData();
 
     const {
         modalShow,
@@ -156,7 +157,11 @@ export default function InventoryDashboard({ auth }: PageProps) {
                                         className="absolute top-0 right-0 p-2 text-lg font-bold"
                                         aria-label="Close"
                                     >
-                                        <FontAwesomeIcon icon={faXmark} />
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                             stroke="currentColor" strokeWidth="2" width="24" height="24">
+                                            <path strokeLinecap="round" strokeLinejoin="round"
+                                                  d="M6 18L18 6M6 6l12 12"/>
+                                        </svg>
                                     </button>
                                 </div>
                             </Modal>
@@ -190,7 +195,7 @@ export default function InventoryDashboard({ auth }: PageProps) {
                 </div>
                 <div className="p-6 text-white border-2 border-blue-500 p-4 mt-4 rounded">
                     リアルタイム通知履歴
-                    {{ downloadCsvError } && (
+                    {downloadCsvError && (
                         <div className="mt-2 text-red-500">
                             {downloadCsvError}
                         </div>
