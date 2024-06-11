@@ -13,11 +13,20 @@ import { useDownloadCsv } from '@/features/DownloadCsv';
 import { usePagenateSearchFilter } from '@/features/PagenateSearchFilter';
 import { useMasterCheckbox } from '@/features/MasterCheckbox';
 import StorageRegister from '@/Components/StorageRegister';
-import Test from '@/Components/test';
-import React, { useEffect } from 'react';
+import DeliverRegister from '@/Components/DeliverRegister';
 
 
 export default function InventoryDashboard({ auth }: PageProps) {
+    // 入庫記録モーダルの状態管理
+    const {
+            showRegisterModal,
+            setShowRegisterModal,
+            searchValue,
+            setSearchValue,
+            showStockModal,
+            setShowStockModal
+        } = useInventoryItemState();
+
     const {
         items,
         loading,
@@ -36,8 +45,6 @@ export default function InventoryDashboard({ auth }: PageProps) {
         errorMessage: downloadCsvError
     } = useDownloadCsv(checkBox, setCheckBox);
 
-    const { searchValue, setSearchValue } = useInventoryItemState();
-
     const {
         currentPage,
         pageCount,
@@ -45,14 +52,9 @@ export default function InventoryDashboard({ auth }: PageProps) {
     } = usePagenateSearchFilter({ items, searchValue });
 
     const { handleMasterCheckboxChange } = useMasterCheckbox(checkBox, setCheckBox);
-
-    // 入庫記録モーダルの状態管理
-    const { showRegisterModal, setShowRegisterModal, showTestComponent, setShowTestComponent } = useInventoryItemState();
-
-    useEffect(() => {
-        setShowTestComponent(true);
-    }, [checkBox, setShowTestComponent]);
-    
+    const getSelectedItems = () => {
+        return items.filter(item => checkBox[item.id]);
+    };
 
     return (
         <AuthenticatedLayout
@@ -79,22 +81,22 @@ export default function InventoryDashboard({ auth }: PageProps) {
                 ) : (
                     <>
                         <div>
-            <div className="flex justify-end space-x-4">
-                <DangerButton onClick={() => setShowRegisterModal(true)} className="text-white border-2 !bg-deepblue !border-lightblue rounded-md mb-2 !focus:ring-blue-500">
-                    入庫記録
-                </DangerButton>
-                <DangerButton onClick={() => setShowTestComponent(true)} className="text-white border-2 !bg-deepblue !border-lightblue rounded-md mb-2 !focus:ring-blue-500">
-                    出庫登録
-                </DangerButton>
-                <DangerButton onClick={handleDownloadCsv} className="text-white border-2 !bg-deepblue !border-lightblue rounded-md mb-2 !focus:ring-blue-500">
-                    CSVダウンロード
-                </DangerButton>
-            </div>
-            <StorageRegister isOpen={showRegisterModal} onClose={() => setShowRegisterModal(false)} />
-             {showTestComponent && (
-                <Test isOpen={showTestComponent} onClose={() => setShowTestComponent(false)} />
-            )}
-            </div>
+                            <div className="flex justify-end space-x-4">
+                                <DangerButton onClick={() => setShowRegisterModal(true)} className="text-white border-2 !bg-deepblue !border-lightblue rounded-md mb-2 !focus:ring-blue-500">
+                                    入庫記録
+                                </DangerButton>
+                                <DangerButton onClick={() => setShowStockModal(true)} className="text-white border-2 !bg-deepblue !border-lightblue rounded-md mb-2 !focus:ring-blue-500">
+                                    出庫登録
+                                </DangerButton>
+                                <DangerButton onClick={handleDownloadCsv} className="text-white border-2 !bg-deepblue !border-lightblue rounded-md mb-2 !focus:ring-blue-500">
+                                    CSVダウンロード
+                                </DangerButton>
+                            </div>
+
+                            <StorageRegister isOpen={showRegisterModal} onClose={() => setShowRegisterModal(false)} />
+                            <DeliverRegister isOpen={showStockModal} onClose={() => setShowStockModal(false)} selectedItems={getSelectedItems()} />
+                        </div>
+
                         <div className="overflow-hidden shadow-sm sm:rounded-lg">
                             <table className="w-full border-4 border-lightblue bg-deepblue">
                                 <thead>

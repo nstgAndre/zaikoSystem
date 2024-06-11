@@ -4,6 +4,7 @@ import { InventoryItem } from '@/types/inventoryItems';
 export const useInventoryItemState = () => {
     const [items, setItems] = useState<InventoryItem[]>([]);
     const [filteredItems, setFilteredItems] = useState<InventoryItem[]>([]);
+    const [selectedItems, setSelectedItems] = useState([]);
     const [loading, setLoading] = useState(false);
     const [searchValue, setSearchValue] = useState('');
     const [checkBox, setCheckBox] = useState<{ [key: string]: boolean }>({});
@@ -16,11 +17,12 @@ export const useInventoryItemState = () => {
     const itemsPerPage = 3;
     const [bulkData, setBulkData] = useState('');
     const [showRegisterModal, setShowRegisterModal] = useState(false);
-    const [showTestComponent, setShowTestComponent] = useState(false); 
+    const [showStockModal, setShowStockModal] = useState(false);
 
     return {
         items, setItems,
         filteredItems, setFilteredItems,
+        selectedItems, setSelectedItems,
         loading, setLoading,
         searchValue, setSearchValue,
         checkBox, setCheckBox,
@@ -28,7 +30,7 @@ export const useInventoryItemState = () => {
         successMessage, setSuccessMessage,
         modalShow, setModalShow,
         showRegisterModal, setShowRegisterModal,
-        showTestComponent, setShowTestComponent,
+        showStockModal, setShowStockModal,
         selectedRemark, setSelectedRemark,
         currentPage, setCurrentPage,
         pageCount, setPageCount,

@@ -11,7 +11,7 @@ export const useBulkData = () => {
     const {bulkData, setBulkData} = useInventoryItemState();
     const [successMessage, setSuccessMessage] = useState(''); //消すかも
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    const DeliverhandleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         try {
             const items = bulkData.split('\n').map(item => {
@@ -25,5 +25,5 @@ export const useBulkData = () => {
         }
     };
 
-    return { bulkData, setBulkData, handleSubmit, successMessage};
+    return { bulkData, setBulkData, DeliverhandleSubmit, successMessage};
 };

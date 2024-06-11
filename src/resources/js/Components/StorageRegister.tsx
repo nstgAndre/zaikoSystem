@@ -8,7 +8,7 @@ interface StorageRegisterProps {
 
 
 const StorageRegister: React.FC<StorageRegisterProps> = ({ isOpen, onClose }) => {
-    const { bulkData, setBulkData, handleSubmit, successMessage} = useBulkData();
+    const { bulkData, setBulkData,  successMessage} = useBulkData();
 
     return (
         <Modal show={isOpen} onClose={onClose}>
@@ -18,7 +18,7 @@ const StorageRegister: React.FC<StorageRegisterProps> = ({ isOpen, onClose }) =>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
-                <form onSubmit={handleSubmit}>
+                <form>
                     <table className="w-full border-4 border-lightblue bg-deepblue h-auto">
                         <tbody>
                             <tr>
