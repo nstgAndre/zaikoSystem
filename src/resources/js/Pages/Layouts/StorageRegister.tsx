@@ -1,13 +1,13 @@
 import { useBulkData } from '@/features/BulkRegister';
 import Modal from '@/Components/Modal';
-
+import React from 'react';
 interface StorageRegisterProps {
     isOpen: boolean;
     onClose: () => void;
 }
 
 const StorageRegister: React.FC<StorageRegisterProps> = ({ isOpen, onClose }) => {
-    const { bulkData, setBulkData,  successMessage} = useBulkData();
+    const { bulkData, setBulkData, bulkHandleSubmit,successMessage} = useBulkData();
 
     return (
         <Modal show={isOpen} onClose={onClose}>
@@ -17,7 +17,7 @@ const StorageRegister: React.FC<StorageRegisterProps> = ({ isOpen, onClose }) =>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
-                <form>
+                <form onSubmit={bulkHandleSubmit}>
                     <table className="w-full border-4 border-lightblue bg-deepblue h-auto">
                         <tbody>
                             <tr>
