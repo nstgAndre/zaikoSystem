@@ -13,6 +13,9 @@ import { useDownloadCsv } from '@/features/DownloadCsv';
 import { usePagenateSearchFilter } from '@/features/PagenateSearchFilter';
 import { useMasterCheckbox } from '@/features/MasterCheckbox';
 import StorageRegister from '@/Components/StorageRegister';
+import Test from '@/Components/test';
+import React, { useEffect } from 'react';
+
 
 export default function InventoryDashboard({ auth }: PageProps) {
     const {
@@ -44,7 +47,12 @@ export default function InventoryDashboard({ auth }: PageProps) {
     const { handleMasterCheckboxChange } = useMasterCheckbox(checkBox, setCheckBox);
 
     // 入庫記録モーダルの状態管理
-    const { showRegisterModal, setShowRegisterModal } = useInventoryItemState();
+    const { showRegisterModal, setShowRegisterModal, showTestComponent, setShowTestComponent } = useInventoryItemState();
+
+    useEffect(() => {
+        setShowTestComponent(true);
+    }, [checkBox, setShowTestComponent]);
+    
 
     return (
         <AuthenticatedLayout
