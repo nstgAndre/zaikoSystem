@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import axios from 'axios';
 import { useInventoryItemState } from '@/hooks/InventoryItems';
 
@@ -9,7 +8,7 @@ export const useBulkData = () => {
 // }
 
     const {bulkData, setBulkData} = useInventoryItemState();
-    const [successMessage, setSuccessMessage] = useState('');
+    const {successMessage, setSuccessMessage} = useInventoryItemState();
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();

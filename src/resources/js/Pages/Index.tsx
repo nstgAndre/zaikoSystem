@@ -78,23 +78,21 @@ export default function InventoryDashboard({ auth }: PageProps) {
                     </div>
                 ) : (
                     <>
-                        <div>
-            <div className="flex justify-end space-x-4">
-                <DangerButton onClick={() => setShowRegisterModal(true)} className="text-white border-2 !bg-deepblue !border-lightblue rounded-md mb-2 !focus:ring-blue-500">
-                    入庫記録
-                </DangerButton>
-                <DangerButton onClick={() => setShowTestComponent(true)} className="text-white border-2 !bg-deepblue !border-lightblue rounded-md mb-2 !focus:ring-blue-500">
-                    出庫登録
-                </DangerButton>
-                <DangerButton onClick={handleDownloadCsv} className="text-white border-2 !bg-deepblue !border-lightblue rounded-md mb-2 !focus:ring-blue-500">
-                    CSVダウンロード
-                </DangerButton>
-            </div>
-            <StorageRegister isOpen={showRegisterModal} onClose={() => setShowRegisterModal(false)} />
-             {showTestComponent && (
-                <Test isOpen={showTestComponent} onClose={() => setShowTestComponent(false)} />
-            )}
-            </div>
+                        <div className="flex justify-end space-x-4">
+                            <DangerButton onClick={() => setShowRegisterModal(true)} className="text-white border-2 !bg-deepblue !border-lightblue rounded-md mb-2 !focus:ring-blue-500">
+                                入庫記録
+                            </DangerButton>
+                            <DangerButton onClick={() => setShowRegisterModal(true)} className="text-white border-2 !bg-deepblue !border-lightblue rounded-md mb-2 !focus:ring-blue-500">
+                                出庫記録
+                            </DangerButton>
+                            <DangerButton onClick={handleDownloadCsv} className="text-white border-2 !bg-deepblue !border-lightblue rounded-md mb-2 !focus:ring-blue-500">
+                                CSVダウンロード
+                            </DangerButton>
+                        </div>
+
+                        <StorageRegister isOpen={showRegisterModal} onClose={() => setShowRegisterModal(false)} />
+
+
                         <div className="overflow-hidden shadow-sm sm:rounded-lg">
                             <table className="w-full border-4 border-lightblue bg-deepblue">
                                 <thead>
