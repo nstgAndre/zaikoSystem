@@ -20,20 +20,20 @@ import DeliverRegister from '@/Pages/Layouts/DeliverRegister';
 export default function InventoryDashboard({ auth }: PageProps) {
     // 入庫記録モーダルの状態管理
     const {
-            showRegisterModal,
-            setShowRegisterModal,
-            searchValue,
-            setSearchValue,
-            showStockModal,
-            setShowStockModal
-        } = useInventoryItemState();
+        showRegisterModal,
+        setShowRegisterModal,
+        searchValue,
+        setSearchValue,
+        showStockModal,
+        setShowStockModal
+    } = useInventoryItemState();
 
-        const {
-            items,
-            loading,
-            checkBox, setCheckBox,
-            errorMessage
-        } = useFetchItemsData();
+    const {
+        items,
+        loading,
+        checkBox, setCheckBox,
+        errorMessage
+    } = useFetchItemsData();
 
     const {
         modalShow,
@@ -154,9 +154,9 @@ export default function InventoryDashboard({ auth }: PageProps) {
                                         aria-label="Close"
                                     >
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                             stroke="currentColor" strokeWidth="2" width="24" height="24">
+                                            stroke="currentColor" strokeWidth="2" width="24" height="24">
                                             <path strokeLinecap="round" strokeLinejoin="round"
-                                                  d="M6 18L18 6M6 6l12 12"/>
+                                                d="M6 18L18 6M6 6l12 12" />
                                         </svg>
                                     </button>
                                 </div>
