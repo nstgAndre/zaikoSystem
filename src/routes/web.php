@@ -62,6 +62,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/api/items/bulk', [ItemController::class, 'insItemBulk']);
     });
 
+    Route::middleware('auth')->group(function () {
+    Route::post('/api/items/update', [ItemController::class, 'update']);
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

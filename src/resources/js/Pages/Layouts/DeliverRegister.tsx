@@ -33,7 +33,7 @@ const DeliverRegister: React.FC<DeliverRegisterProps> = ({ isOpen, onClose, sele
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         try {
-            const response = await axios.post('/api/path/to/andre/endpoint', {
+            const response = await axios.post('/api/items/update', {
                 items: selectedItems.map(item => ({
                     id: item.id,
                     outItem: item.outItem
@@ -58,25 +58,25 @@ const DeliverRegister: React.FC<DeliverRegisterProps> = ({ isOpen, onClose, sele
                         <table className="w-full border-4 border-lightblue bg-deepblue">
                             <thead>
                                 <tr className='text-white grid grid-cols-8 text-white border-b-2 border-lightblue mr-2 ml-2'>
-                                    <th className="py-3 px-4 text-center">No</th>
-                                    <th className="py-3 px-2 text-center">商名</th>
-                                    <th className="py-3 px-4 text-center">型番</th>
-                                    <th className="py-3 px-4 text-center">納品場所</th>
-                                    <th className="py-3 px-4 text-center">入庫数量</th>
-                                    <th className="py-3 px-4 text-center">出庫数量</th>
-                                    <th className="py-3 px-4 text-center">在庫数量</th>
-                                    <th className="py-3 px-4 text-center mr-4">備考</th>
+                                    <th className="py-3 px-5 text-center">No</th>
+                                    <th className="py-3 px-5 text-center">商名</th>
+                                    <th className="py-3 px-5 text-center">型番</th>
+                                    <th className="py-3 px-5 text-center">納品場所</th>
+                                    <th className="py-3 px-5 text-center">入庫数量</th>
+                                    <th className="py-3 px-5 text-center">出庫数量</th>
+                                    <th className="py-3 px-5 text-center">在庫数量</th>
+                                    <th className="py-3 px-5 text-center mr-4">備考</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {selectedItems.map((item) => (
                                     <tr key={item.id} className=' mt-4 mr-2 ml-2 mb-2 grid grid-cols-8 text-white border-2 border-lightblue rounded-md'>
-                                        <td className="py-3 px-4 text-center">{item.id}</td>
-                                        <td className="py-3 px-4 text-center">{item.productName}</td>
-                                        <td className="py-3 px-4 text-center">{item.modelNumber}</td>
-                                        <td className="py-3 px-4 text-center">{item.location}</td>
-                                        <td className="py-3 px-4 text-center">{item.inItem}</td>
-                                        <td className="py-3 px-4 text-center">
+                                        <td className="py-3 px-4 text-center whitespace-nowrap">{item.id}</td>
+                                        <td className="py-3 px-4 text-center whitespace-nowrap">{item.productName}</td>
+                                        <td className="py-3 px-4 text-center whitespace-nowrap">{item.modelNumber}</td>
+                                        <td className="py-3 px-4 text-center whitespace-nowrap">{item.location}</td>
+                                        <td className="py-3 px-4 text-center whitespace-nowrap">{item.inItem}</td>
+                                        <td className="py-3 px-4 text-center whitespace-nowrap">
                                             {inputNumber(item, (id, value) => {
                                                 console.log(`ID: ${id}, Value: ${value}`);
                                             })}
