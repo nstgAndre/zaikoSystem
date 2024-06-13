@@ -35,7 +35,6 @@ const DeliverRegister: React.FC<DeliverRegisterProps> = ({ isOpen, onClose, sele
         <input
             type="text"
             inputMode="numeric"
-            defaultValue={item.outItem}
             onChange={(e) => handleOutItemChange(item.id, parseInt(e.target.value) || 0)}
             className="w-full text-center bg-deepblue"
         />
@@ -45,12 +44,12 @@ const DeliverRegister: React.FC<DeliverRegisterProps> = ({ isOpen, onClose, sele
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         try {
-            const sortedItems = selectedItems.sort((a, b) => a.id - b.id).map(item => ({
+            const itemsUpdate = selectedItems.map(item => ({
                 id: item.id,
-                outItem: outItems[item.id]
+                outItem: outItems[item.id],
             }));
             const response = await axios.post('/api/items/update', {
-                items: sortedItems
+                items: itemsUpdate
             });
             console.log('Success:', response.data);
         } catch (error) {
@@ -106,7 +105,7 @@ const DeliverRegister: React.FC<DeliverRegisterProps> = ({ isOpen, onClose, sele
                             </tbody>
                         </table>
                         <Modal show={modalShow} onClose={closeModal}>
-                            <div className="p-4">
+                            <div className="pt-10 pb-10 pl-2 pr-2">
                                 <h3 className="text-lg font-semibold">備考詳細</h3>
                                 <p>{selectedRemark}</p>
                                 <button

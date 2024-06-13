@@ -96,26 +96,26 @@ class ItemController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request)
-    {
-        $items = $request->input('items');
-    
-        foreach ($items as $itemData) {
-            $item = Item::find($itemData['id']);
-            if ($item) {
-                $data = $item->update([
-                    'outItem' => $itemData['outItem']
-                ]);
-                
-                if ($data) {
-                    Log::info('Item updated successfully', ['item' => $item, 'outItem' => $itemData['outItem']]);
-                } else {
-                    Log::warning('Item update failed', ['item' => $item, 'outItem' => $itemData['outItem']]);
-                }
+{
+    $items = $request->input('items');
+
+    foreach ($items as $itemData) {
+        $item = Item::find($itemData['id']);
+        if ($item) {
+            $newInventory = $item->inventoryItem - $itemData['outItem']; // 新しい在庫数量を計算 入庫処理は数字の前に-を付ければ増える
+            $data = $item->update([
+                'outItem' => $itemData['outItem'],
+                'inventoryItem' => $newInventory 
+            ]);
+            if ($data) {
+                Log::info('Item updated successfully', ['item' => $item, 'outItem' => $itemData['outItem'], 'newInventory' => $newInventory]);
+            } else {
+                Log::warning('Item update failed', ['item' => $item, 'outItem' => $itemData['outItem']]);
             }
-            
         }
-        return response()->json(['success' => 'アイテムが正常に更新されました。']);
     }
+    return response()->json(['success' => 'アイテムが正常に更新されました。']);
+}
 
     /**
      * Remove the specified resource from storage.
