@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useInventoryItemState } from '@/hooks/InventoryItems';
+import React from "react";
 
 export const useBulkData = () => {
 // interface BulkAddResponse {
@@ -10,7 +11,7 @@ export const useBulkData = () => {
     const {bulkData, setBulkData} = useInventoryItemState();
     const {successMessage, setSuccessMessage} = useInventoryItemState();
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    const bulkHandleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         try {
             const items = bulkData.split('\n').map(item => {
@@ -23,6 +24,5 @@ export const useBulkData = () => {
             console.error('Error posting bulk items:', error);
         }
     };
-
-    return { bulkData, setBulkData, handleSubmit, successMessage};
+    return { bulkData, setBulkData, bulkHandleSubmit, successMessage};
 };

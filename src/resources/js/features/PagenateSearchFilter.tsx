@@ -27,6 +27,7 @@ export const usePagenateSearchFilter = ({ items, searchValue }: Props) => {
             normalizeSearchString(item.location).includes(normalizedSearchValue) ||
             normalizeSearchString(item.remarks).includes(normalizedSearchValue)
         );
+        filtered.sort((a, b) => a.id - b.id); //昇順に並び替え
         setFilteredItems(filtered);
         setPageCount(Math.ceil(filtered.length / itemsPerPage));
         setCurrentPage(0);

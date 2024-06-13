@@ -1,31 +1,32 @@
 import { Head } from '@inertiajs/react';
+import React from 'react';
 import { ThreeDots as Loader } from 'react-loader-spinner';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import DangerButton from '@/Components/DangerButton';
 import { PageProps } from '@/types';
 import Modal from '@/Components/Modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFilter, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import { useInventoryItemState } from '@/hooks/InventoryItems';
-import { useFetchItemsData } from '@/features/FetchItemsData';
+import { useFetchItemsData } from '@/functions/FetchItemsData';
 import { useModalRemark } from '@/features/ModalRemark';
 import { useDownloadCsv } from '@/features/DownloadCsv';
 import { usePagenateSearchFilter } from '@/features/PagenateSearchFilter';
 import { useMasterCheckbox } from '@/features/MasterCheckbox';
-import StorageRegister from '@/Components/StorageRegister';
-import DeliverRegister from '@/Components/DeliverRegister';
+import StorageRegister from '@/Pages/Layouts/StorageRegister';
+import DeliverRegister from '@/Pages/Layouts/DeliverRegister';
 
 
 export default function InventoryDashboard({ auth }: PageProps) {
     // 入庫記録モーダルの状態管理
     const {
-            showRegisterModal,
-            setShowRegisterModal,
-            searchValue,
-            setSearchValue,
-            showStockModal,
-            setShowStockModal
-        } = useInventoryItemState();
+        showRegisterModal,
+        setShowRegisterModal,
+        searchValue,
+        setSearchValue,
+        showStockModal,
+        setShowStockModal
+    } = useInventoryItemState();
 
     const {
         items,
@@ -100,7 +101,7 @@ export default function InventoryDashboard({ auth }: PageProps) {
                         <div className="overflow-hidden shadow-sm sm:rounded-lg">
                             <table className="w-full border-4 border-lightblue bg-deepblue">
                                 <thead>
-                                    <tr className='text-white grid grid-cols-9 text-white border-b-2 border-lightblue mr-2 ml-2'>
+                                    <tr className='text-white grid grid-cols-7 text-white border-b-2 border-lightblue mr-2 ml-2'>
                                         <th className='py-3 pl-1 text-center'>
                                             <input
                                                 type='checkbox'
@@ -112,15 +113,13 @@ export default function InventoryDashboard({ auth }: PageProps) {
                                         <th className="py-3 px-4 text-center">商品名</th>
                                         <th className="py-3 px-4 text-center">型番</th>
                                         <th className="py-3 px-4 text-center">納品場所</th>
-                                        <th className="py-3 px-4 text-center">入庫数量</th>
-                                        <th className="py-3 px-4 text-center">出庫数量</th>
                                         <th className="py-3 px-4 text-center">在庫数量</th>
                                         <th className="py-3 px-4 text-center">備考</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {itemsDisplayed.map((item) => (
-                                        <tr key={item.id} className=' mt-4 mr-2 ml-2 mb-2 grid grid-cols-9 text-white border-2 border-lightblue rounded-md'>
+                                        <tr key={item.id} className=' mt-4 mr-2 ml-2 mb-2 grid grid-cols-7 text-white border-2 border-lightblue rounded-md'>
                                             <td className='py-3 text-center'>
                                                 <input
                                                     type='checkbox'
@@ -135,8 +134,6 @@ export default function InventoryDashboard({ auth }: PageProps) {
                                             <td className="py-3 px-4 text-center">{item.productName}</td>
                                             <td className="py-3 px-4 text-center">{item.modelNumber}</td>
                                             <td className="py-3 px-4 text-center">{item.location}</td>
-                                            <td className="py-3 px-4 text-center">{item.inItem}</td>
-                                            <td className="py-3 px-4 text-center">{item.outItem}</td>
                                             <td className="py-3 px-4 text-center">{item.inventoryItem}</td>
                                             <td className="py-3 px-4 text-center">
                                                 <DangerButton onClick={() => openModal(item.remarks)} className="text-white !bg-gold">
@@ -156,7 +153,11 @@ export default function InventoryDashboard({ auth }: PageProps) {
                                         className="absolute top-0 right-0 p-2 text-lg font-bold"
                                         aria-label="Close"
                                     >
-                                        <FontAwesomeIcon icon={faXmark} />
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor" strokeWidth="2" width="24" height="24">
+                                            <path strokeLinecap="round" strokeLinejoin="round"
+                                                d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
                                     </button>
                                 </div>
                             </Modal>
@@ -190,7 +191,7 @@ export default function InventoryDashboard({ auth }: PageProps) {
                 </div>
                 <div className="p-6 text-white border-2 border-blue-500 p-4 mt-4 rounded">
                     リアルタイム通知履歴
-                    {{ downloadCsvError } && (
+                    {downloadCsvError && (
                         <div className="mt-2 text-red-500">
                             {downloadCsvError}
                         </div>

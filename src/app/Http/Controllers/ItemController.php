@@ -7,6 +7,7 @@ use App\Models\Item;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Auth;
 use Laracsv\Export;
+use Illuminate\Support\Facades\Log;
 
 class ItemController extends Controller
 {
@@ -15,7 +16,7 @@ class ItemController extends Controller
      */
     public function index(Request $request)
     {
-        $perPage = $request->input('per_page');
+        $perPage = $request->input('per_page', 100);
         $items = Item::paginate($perPage);
         return response()->json($items);
     }
@@ -94,37 +95,26 @@ class ItemController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
-        $item = Item::find($id);
-        if($item) {
-            return response()->json(['error' => 'アイテムが見つかりません'], 404);
+        $items = $request->input('items');
+    
+        foreach ($items as $itemData) {
+            $item = Item::find($itemData['id']);
+            if ($item) {
+                $data = $item->update([
+                    'outItem' => $itemData['outItem']
+                ]);
+                
+                if ($data) {
+                    Log::info('Item updated successfully', ['item' => $item, 'outItem' => $itemData['outItem']]);
+                } else {
+                    Log::warning('Item update failed', ['item' => $item, 'outItem' => $itemData['outItem']]);
+                }
+            }
+            
         }
-
-        $rules = [
-            'productName' => 'required|string',
-            'modelNumber' => 'required|string',
-            'location' => 'required|string',
-            'inItem' => 'required|integer|min:0',
-            'inventoryItem' => 'required|integer|min:0',
-            'remarks' => 'nullable|string',
-        ];
-        
-        $validated = $request->validate($rules);
-
-        if($validated['inventoryItem'] != $validated['inItem']) {
-            return response()->json(['error' =>'在庫数量は入庫数量と同じでなければなりません。'], 422);
-        }
-
-        $item->productName = $validated['productName'];
-        $item->modelNumber = $validated['modelNumber'];
-        $item->location = $validated['location'];
-        $item->inItem = $validated['inItem'];
-        $item->inventoryItem = $validated['inventoryItem'];
-        $item->remarks = $validated['remarks'] ?? $item->remarks;
-        $item->save();
-
-        return response()->json(['success' => '更新成功しました']);
+        return response()->json(['success' => 'アイテムが正常に更新されました。']);
     }
 
     /**
