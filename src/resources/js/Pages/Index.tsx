@@ -1,12 +1,12 @@
 import { Head } from '@inertiajs/react';
-import React from 'react';
+import React, { useState } from 'react';
 import { ThreeDots as Loader } from 'react-loader-spinner';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import DangerButton from '@/Components/DangerButton';
 import { PageProps } from '@/types';
 import Modal from '@/Components/Modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFilter } from '@fortawesome/free-solid-svg-icons';
+import { faFilter, faPen } from '@fortawesome/free-solid-svg-icons';
 import { useInventoryItemState } from '@/hooks/InventoryItems';
 import { useFetchItemsData } from '@/functions/FetchItemsData';
 import { useModalRemark } from '@/features/ModalRemark';
@@ -25,7 +25,11 @@ export default function InventoryDashboard({ auth }: PageProps) {
         searchValue,
         setSearchValue,
         showStockModal,
-        setShowStockModal
+        setShowStockModal,
+        btnChangeColor, 
+        setBtnChangeColor,
+        activeButton,
+        setActiveButton
     } = useInventoryItemState();
 
     const {
@@ -56,6 +60,7 @@ export default function InventoryDashboard({ auth }: PageProps) {
     const getSelectedItems = () => {
         return items.filter(item => checkBox[item.id]);
     };
+
 
     return (
         <AuthenticatedLayout
@@ -101,7 +106,7 @@ export default function InventoryDashboard({ auth }: PageProps) {
                         <div className="overflow-hidden shadow-sm sm:rounded-lg">
                             <table className="w-full border-4 border-lightblue bg-deepblue">
                                 <thead>
-                                    <tr className='text-white grid grid-cols-7 text-white border-b-2 border-lightblue mr-2 ml-2'>
+                                    <tr className='text-white grid grid-cols-8 text-white border-b-2 border-lightblue mr-2 ml-2'>
                                         <th className='py-3 pl-1 text-center'>
                                             <input
                                                 type='checkbox'
@@ -115,11 +120,12 @@ export default function InventoryDashboard({ auth }: PageProps) {
                                         <th className="py-3 px-4 text-center">納品場所</th>
                                         <th className="py-3 px-4 text-center">在庫数量</th>
                                         <th className="py-3 px-4 text-center">備考</th>
+                                        <th className="py-3 px-4 text-center">編集</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {itemsDisplayed.map((item) => (
-                                        <tr key={item.id} className=' mt-4 mr-2 ml-2 mb-2 grid grid-cols-7 text-white border-2 border-lightblue rounded-md'>
+                                        <tr key={item.id} className=' mt-4 mr-2 ml-2 mb-2 grid grid-cols-8 text-white border-2 border-lightblue rounded-md'>
                                             <td className='py-3 text-center'>
                                                 <input
                                                     type='checkbox'
@@ -140,6 +146,20 @@ export default function InventoryDashboard({ auth }: PageProps) {
                                                     詳細
                                                 </ DangerButton>
                                             </td>
+                                            <td className="py-3 px-4 text-center">
+                                                <div className="flex items-center justify-center ">
+                                                    <DangerButton
+                                                        className={`!bg-${activeButton === Number(item.id) ? btnChangeColor : 'green'}`}
+                                                        onClick={() => {
+                                                            setActiveButton(Number(item.id));
+                                                            setBtnChangeColor(btnChangeColor === 'green' ? 'red' : 'green');
+                                                        }}
+                                                    >
+                                                        <FontAwesomeIcon icon={faPen} />
+                                                    </DangerButton>
+                                                </div>
+                                            </td>
+
                                         </tr>
                                     ))}
                                 </tbody>

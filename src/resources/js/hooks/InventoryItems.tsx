@@ -18,6 +18,10 @@ export const useInventoryItemState = () => {
     const [bulkData, setBulkData] = useState('');
     const [showRegisterModal, setShowRegisterModal] = useState(false);
     const [showStockModal, setShowStockModal] = useState(false);
+    const [btnChangeColor, setBtnChangeColor] = useState('green');
+    const [activeButton, setActiveButton] = useState<number | null>(null);
+
+
 
     return {
         items, setItems,
@@ -35,6 +39,8 @@ export const useInventoryItemState = () => {
         currentPage, setCurrentPage,
         pageCount, setPageCount,
         itemsPerPage,
-        bulkData, setBulkData
+        bulkData, setBulkData,
+        btnChangeColor, setBtnChangeColor,
+        activeButton, setActiveButton
     };
 };
