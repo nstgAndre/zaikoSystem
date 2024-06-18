@@ -106,7 +106,7 @@ export default function InventoryDashboard({ auth }: PageProps) {
                         <div className="overflow-hidden shadow-sm sm:rounded-lg">
                             <table className="w-full border-4 border-lightblue bg-deepblue">
                                 <thead>
-                                    <tr className='text-white grid grid-cols-8 text-white border-b-2 border-lightblue mr-2 ml-2'>
+                                    <tr className='text-white grid grid-cols-7 text-white border-b-2 border-lightblue mr-2 ml-2'>
                                         <th className='py-3 pl-1 text-center'>
                                             <input
                                                 type='checkbox'
@@ -114,7 +114,7 @@ export default function InventoryDashboard({ auth }: PageProps) {
                                                 onChange={handleMasterCheckboxChange}
                                             />
                                         </th>
-                                        <th className="py-3 px-4 text-center">No</th>
+                                        {/* <th className="py-3 px-4 text-center">No</th> */}
                                         <th className="py-3 px-4 text-center">商品名</th>
                                         <th className="py-3 px-4 text-center">型番</th>
                                         <th className="py-3 px-4 text-center">納品場所</th>
@@ -125,7 +125,7 @@ export default function InventoryDashboard({ auth }: PageProps) {
                                 </thead>
                                 <tbody>
                                     {itemsDisplayed.map((item) => (
-                                        <tr key={item.id} className=' mt-4 mr-2 ml-2 mb-2 grid grid-cols-8 text-white border-2 border-lightblue rounded-md'>
+                                        <tr key={item.id} className=' mt-4 mr-2 ml-2 mb-2 grid grid-cols-7 text-white border-2 border-lightblue rounded-md'>
                                             <td className='py-3 text-center'>
                                                 <input
                                                     type='checkbox'
@@ -136,7 +136,7 @@ export default function InventoryDashboard({ auth }: PageProps) {
                                                     }}
                                                 />
                                             </td>
-                                            <td className="py-3 px-4 text-center">{item.id}</td>
+                                            {/* <td className="py-3 px-4 text-center">{item.id}</td> */}
                                             <td className="py-3 px-4 text-center">{item.productName}</td>
                                             <td className="py-3 px-4 text-center">{item.modelNumber}</td>
                                             <td className="py-3 px-4 text-center">{item.location}</td>
@@ -149,7 +149,7 @@ export default function InventoryDashboard({ auth }: PageProps) {
                                             <td className="py-3 px-4 text-center">
                                                 <div className="flex items-center justify-center ">
                                                     <DangerButton
-                                                        className={`!bg-${activeButton === Number(item.id) ? btnChangeColor : 'green'}`}
+                                                        bgColor={activeButton === Number(item.id) ? (btnChangeColor === 'green' ? 'bg-green' : 'bg-red') : 'bg-green'}
                                                         onClick={() => {
                                                             setActiveButton(Number(item.id));
                                                             setBtnChangeColor(btnChangeColor === 'green' ? 'red' : 'green');
