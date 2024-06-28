@@ -4,7 +4,7 @@ import { InventoryItem } from '@/types/inventoryItems';
 export const useInventoryItemState = () => {
     const [items, setItems] = useState<InventoryItem[]>([]);
     const [filteredItems, setFilteredItems] = useState<InventoryItem[]>([]);
-    const [selectedItems, setSelectedItems] = useState([]);
+    const [selectedItems, setSelectedItems] = useState<InventoryItem[]>([]);
     const [loading, setLoading] = useState(false);
     const [searchValue, setSearchValue] = useState('');
     const [checkBox, setCheckBox] = useState<{ [key: string]: boolean }>({});
@@ -18,6 +18,11 @@ export const useInventoryItemState = () => {
     const [bulkData, setBulkData] = useState('');
     const [showRegisterModal, setShowRegisterModal] = useState(false);
     const [showStockModal, setShowStockModal] = useState(false);
+    const [btnChangeColor, setBtnChangeColor] = useState('green');
+    const [activeButton, setActiveButton] = useState<number | null>(null);
+    const [gridCols, setGridCols] = useState('grid-cols-7');
+    const [btnEditChangeColors,setBtnEditChangeColors] = useState<{ [key: string]: string }>({});
+    const [activeButtons, setActiveButtons] = useState<number | null>(null);
 
     return {
         items, setItems,
@@ -35,6 +40,11 @@ export const useInventoryItemState = () => {
         currentPage, setCurrentPage,
         pageCount, setPageCount,
         itemsPerPage,
-        bulkData, setBulkData
+        bulkData, setBulkData,
+        btnChangeColor, setBtnChangeColor,
+        activeButton, setActiveButton,
+        gridCols, setGridCols,
+        btnEditChangeColors,setBtnEditChangeColors,
+        activeButtons, setActiveButtons,
     };
 };

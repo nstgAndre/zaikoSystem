@@ -1,7 +1,7 @@
 import DangerButton from '@/Components/DangerButton';
 import Modal from '@/Components/Modal';
 import axios from 'axios';
-import React from 'react';
+import React, { useState } from 'react';
 import { InventoryItem } from '@/types/inventoryItems';
 import { useModalRemark } from '@/features/ModalRemark';
 
@@ -11,8 +11,19 @@ interface DeliverRegisterProps {
     selectedItems: InventoryItem[];
 }
 
-
 const DeliverRegister: React.FC<DeliverRegisterProps> = ({ isOpen, onClose, selectedItems }) => {
+
+    const [outItems, setOutItems] = useState<{ [key: number]: number }>(
+        selectedItems.reduce<{ [key: number]: number }>((acc, item) => {
+            acc[item.id] = item.outItem || 0;
+            return acc;
+        }, {})
+    );
+
+    // 出庫数量を更新
+    const handleOutItemChange = (id: number, value: number) => {
+        setOutItems(prev => ({ ...prev, [id]: value }));
+    };
 
     const {
         modalShow,
@@ -20,24 +31,25 @@ const DeliverRegister: React.FC<DeliverRegisterProps> = ({ isOpen, onClose, sele
         openModal, closeModal
     } = useModalRemark();
 
-    const inputNumber = (item: InventoryItem, onChange: (id: number | string, value: string) => void) => (
+    const inputOutItem = (item: InventoryItem) => (
         <input
             type="text"
             inputMode="numeric"
-            defaultValue={item.outItem}
-            onChange={(e) => onChange(item.id, e.target.value)}
+            onChange={(e) => handleOutItemChange(item.id, parseInt(e.target.value) || 0)}
             className="w-full text-center bg-deepblue"
         />
     );
 
+    // フォーム送信時の処理
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         try {
-            const response = await axios.post('/api/path/to/andre/endpoint', {
-                items: selectedItems.map(item => ({
-                    id: item.id,
-                    outItem: item.outItem
-                }))
+            const itemsUpdate = selectedItems.map(item => ({
+                id: item.id,
+                outItem: outItems[item.id],
+            }));
+            const response = await axios.post('/api/items/update', {
+                items: itemsUpdate
             });
             console.log('Success:', response.data);
         } catch (error) {
@@ -57,30 +69,24 @@ const DeliverRegister: React.FC<DeliverRegisterProps> = ({ isOpen, onClose, sele
                     <div className="overflow-hidden h shadow-sm sm:rounded-lg">
                         <table className="w-full border-4 border-lightblue bg-deepblue">
                             <thead>
-                                <tr className='text-white grid grid-cols-8 text-white border-b-2 border-lightblue mr-2 ml-2'>
-                                    <th className="py-3 px-4 text-center">No</th>
-                                    <th className="py-3 px-2 text-center">商名</th>
-                                    <th className="py-3 px-4 text-center">型番</th>
-                                    <th className="py-3 px-4 text-center">納品場所</th>
-                                    <th className="py-3 px-4 text-center">入庫数量</th>
-                                    <th className="py-3 px-4 text-center">出庫数量</th>
-                                    <th className="py-3 px-4 text-center">在庫数量</th>
-                                    <th className="py-3 px-4 text-center mr-4">備考</th>
+                                <tr className='text-white grid grid-cols-7 text-white border-b-2 border-lightblue mr-2 ml-2'>
+                                    <th className="py-3 px-5 text-center whitespace-nowrap">No</th>
+                                    <th className="py-3 px-5 text-center whitespace-nowrap">商名</th>
+                                    <th className="py-3 px-5 text-center whitespace-nowrap">型番</th>
+                                    <th className="py-3 px-5 text-center whitespace-nowrap">納品場所</th>
+                                    <th className="py-3 px-5 text-center whitespace-nowrap">出庫数量</th>
+                                    <th className="py-3 px-5 text-center whitespace-nowrap">在庫数量</th>
+                                    <th className="py-3 px-5 text-center mr-4 whitespace-nowrap">備考</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {selectedItems.map((item) => (
-                                    <tr key={item.id} className=' mt-4 mr-2 ml-2 mb-2 grid grid-cols-8 text-white border-2 border-lightblue rounded-md'>
-                                        <td className="py-3 px-4 text-center">{item.id}</td>
-                                        <td className="py-3 px-4 text-center">{item.productName}</td>
-                                        <td className="py-3 px-4 text-center">{item.modelNumber}</td>
-                                        <td className="py-3 px-4 text-center">{item.location}</td>
-                                        <td className="py-3 px-4 text-center">{item.inItem}</td>
-                                        <td className="py-3 px-4 text-center">
-                                            {inputNumber(item, (id, value) => {
-                                                console.log(`ID: ${id}, Value: ${value}`);
-                                            })}
-                                        </td>
+                                    <tr key={item.id} className=' mt-4 mr-2 ml-2 mb-2 grid grid-cols-7  text-white border-2 border-lightblue rounded-md'>
+                                        <td className="py-3 px-4 text-center whitespace-nowrap">{item.id}</td>
+                                        <td className="py-3 px-4 text-center whitespace-nowrap">{item.productName}</td>
+                                        <td className="py-3 px-4 text-center whitespace-nowrap">{item.modelNumber}</td>
+                                        <td className="py-3 px-4 text-center whitespace-nowrap">{item.location}</td>
+                                        <td className="py-3 px-4 ml-2 text-center whitespace-nowrap">{inputOutItem(item)}</td>
                                         <td className="py-3 px-4 text-center">{item.inventoryItem}</td>
                                         <td className="py-3 px-4 text-center">
                                             <DangerButton type="button" onClick={() => openModal(item.remarks)} className="text-white !bg-gold">
@@ -99,7 +105,7 @@ const DeliverRegister: React.FC<DeliverRegisterProps> = ({ isOpen, onClose, sele
                             </tbody>
                         </table>
                         <Modal show={modalShow} onClose={closeModal}>
-                            <div className="p-4">
+                            <div className="pt-10 pb-10 pl-2 pr-2">
                                 <h3 className="text-lg font-semibold">備考詳細</h3>
                                 <p>{selectedRemark}</p>
                                 <button
