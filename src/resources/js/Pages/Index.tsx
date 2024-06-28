@@ -34,9 +34,10 @@ export default function InventoryDashboard({ auth }: PageProps) {
     } = useInventoryItemState();
 
     const {
-        items,
+        items=[],
         loading,
         checkBox, setCheckBox,
+        fetchData
         // errorMessage
     } = useFetchItemsData();
 
@@ -59,6 +60,9 @@ export default function InventoryDashboard({ auth }: PageProps) {
 
     const { handleMasterCheckboxChange } = useMasterCheckbox(checkBox, setCheckBox);
     const getSelectedItems = () => {
+        if (!Array.isArray(items)) {
+            return [];
+        }
         return items.filter(item => checkBox[item.id]);
     };
 
@@ -81,10 +85,12 @@ export default function InventoryDashboard({ auth }: PageProps) {
         try {
             const response = await axios.put(`/api/items/${id}`, updatedValues);
             console.log('Update success:', response.data);
+                await fetchData();
         } catch (error) {
             console.error('Error update item:', error);
         }
     };
+
     //編集後更新処理
     const handleEditButtonClick = (item: {id: number}) => {
         const isLightRed = btnEditChangeColors[item.id] === 'lightred';

@@ -52,7 +52,7 @@ Route::get('/StorageRegister', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/api/items', [ItemController::class, 'index']);
 });
-
+//csv取得
 Route::middleware('auth')->group(function () {
 Route::post('/api/items/csv', [ItemController::class, 'csv']);
 });
@@ -61,6 +61,11 @@ Route::post('/api/items/csv', [ItemController::class, 'csv']);
 Route::middleware('auth')->group(function () {
     Route::post('/api/items/bulk', [ItemController::class, 'insItemBulk']);
     });
+
+//編集
+Route::middleware('auth')->group(function () {
+    Route::put('/api/items/{id}', [ItemController::class, 'updateItemDetails']);
+});
 
     Route::middleware('auth')->group(function () {
     Route::post('/api/items/update', [ItemController::class, 'update']);

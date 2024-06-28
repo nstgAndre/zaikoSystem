@@ -4,30 +4,32 @@ import { InventoryItem } from '@/types/inventoryItems';
 import { useInventoryItemState } from '@/hooks/InventoryItems';
 
 export const useFetchItemsData = () => {
+    const {
+        loading, setLoading,
+        items, setItems,
+        checkBox, setCheckBox,
+        errorMessage, setErrorMessage
+    } = useInventoryItemState();
 
-    const {loading, setLoading} = useInventoryItemState();
-    const {items, setItems} = useInventoryItemState();;
-    const {checkBox, setCheckBox} = useInventoryItemState();
-    const {errorMessage, setErrorMessage} = useInventoryItemState();
+    const fetchData = async () => {
+        setLoading(true);
+        try {
+            const response = await axios.get('/api/items');
+            const data = Array.isArray(response.data.data) ? response.data.data : [];
+            setItems(data);
+            const checkBoxState = data.reduce((acc: { [key: string]: boolean }, item: InventoryItem) => {
+                acc[item.id] = false;
+                return acc;
+            }, {});
+            setCheckBox(checkBoxState);
+        } catch (error) {
+            console.error('Error fetching items:', error);
+            setErrorMessage('アイテムの取得中にエラーが発生しました。');
+        }
+        setLoading(false);
+    };
 
     useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                const response = await axios.get('/api/items');
-                setItems(response.data.data);
-                const checkBoxState = response.data.data.reduce((acc: { [key: string]: boolean }, item: InventoryItem) => {
-                    acc[item.id] = false;
-                    return acc;
-                }, {});
-                setCheckBox(checkBoxState);
-            } catch (error) {
-                console.error('Error fetching items:', error);
-                setErrorMessage('アイテムの取得中にエラーが発生しました。');
-            }
-            setLoading(false);
-        };
-
         fetchData();
 
         //ブラウザ戻る防止
@@ -40,7 +42,7 @@ export const useFetchItemsData = () => {
         return () => {
             window.removeEventListener('popstate', handlePopState);
         };
-    }, []);
+    }, [setLoading, setItems, setCheckBox, setErrorMessage]);
 
-    return { items, setItems, checkBox, setCheckBox, loading, errorMessage, setErrorMessage };
+    return { items, setItems, checkBox, setCheckBox, loading, errorMessage, setErrorMessage, fetchData };
 };

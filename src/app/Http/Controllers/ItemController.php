@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\ItemsRequest;
 use App\Models\Item;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Auth;
@@ -172,4 +173,21 @@ class ItemController extends Controller
         return response()->json(['success' => 'アイテムが正常に登録されました。']);
     }
 
+    public function updateItemDetails(ItemsRequest $request, string $id)
+    {
+        $validatedData = $request->validated();
+
+        $item = Item::find($id);
+        if (!$item) {
+            return response()->json(['error' => 'アイテムが見つかりません'], 404);
+        }
+
+        $item->productName = $validatedData['productName'];
+        $item->modelNumber = $validatedData['modelNumber'];
+        $item->location = $validatedData['location'];
+        $item->remarks = $validatedData['remarks'];
+        $item->save();
+
+        return response()->json(['success' => 'アイテムが正常に更新されました。']);
+    }
 }

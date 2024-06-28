@@ -20,6 +20,7 @@ export const usePagenateSearchFilter = ({ items, searchValue }: Props) => {
     };
 
     useEffect(() => {
+        if (!Array.isArray(items)) return; // itemsが配列であることを確認
         const normalizedSearchValue = normalizeSearchString(searchValue);
         const filtered = items.filter(item =>
             normalizeSearchString(item.productName).includes(normalizedSearchValue) ||
@@ -27,7 +28,7 @@ export const usePagenateSearchFilter = ({ items, searchValue }: Props) => {
             normalizeSearchString(item.location).includes(normalizedSearchValue) ||
             normalizeSearchString(item.remarks).includes(normalizedSearchValue)
         );
-        filtered.sort((a, b) => a.id - b.id); //昇順に並び替え
+        filtered.sort((a, b) => b.id - a.id); //降順に並び替え
         setFilteredItems(filtered);
         setPageCount(Math.ceil(filtered.length / itemsPerPage));
         setCurrentPage(0);
