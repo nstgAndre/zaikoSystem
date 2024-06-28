@@ -21,7 +21,7 @@ export const useInventoryItemState = () => {
     const [btnChangeColor, setBtnChangeColor] = useState('green');
     const [activeButton, setActiveButton] = useState<number | null>(null);
     const [gridCols, setGridCols] = useState('grid-cols-7');
-    const [btnEditChangeColors,setbtnEditChangeColors] = useState<{ [key: string]: string }>({});
+    const [btnEditChangeColors,setBtnEditChangeColors] = useState<{ [key: string]: string }>({});
     const [activeButtons, setActiveButtons] = useState<number | null>(null);
 
     return {
@@ -44,7 +44,7 @@ export const useInventoryItemState = () => {
         btnChangeColor, setBtnChangeColor,
         activeButton, setActiveButton,
         gridCols, setGridCols,
-        btnEditChangeColors,setbtnEditChangeColors,
+        btnEditChangeColors,setBtnEditChangeColors,
         activeButtons, setActiveButtons,
     };
 };

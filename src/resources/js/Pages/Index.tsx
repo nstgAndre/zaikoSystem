@@ -28,7 +28,7 @@ export default function InventoryDashboard({ auth }: PageProps) {
         showStockModal,
         setShowStockModal,
         btnEditChangeColors,
-        setbtnEditChangeColors,
+        setBtnEditChangeColors,
         // gridCols,
         setGridCols
     } = useInventoryItemState();
@@ -37,7 +37,7 @@ export default function InventoryDashboard({ auth }: PageProps) {
         items,
         loading,
         checkBox, setCheckBox,
-        errorMessage
+        // errorMessage
     } = useFetchItemsData();
 
     const {
@@ -71,8 +71,13 @@ export default function InventoryDashboard({ auth }: PageProps) {
         }
     }, [btnEditChangeColors, setGridCols]);
 
-    //
-    const handleItemsUpdate = async (id: number, updatedValues: any) => {
+    //編集後データベース更新処理
+    const handleItemsUpdate = async (id: number, updatedValues: {
+        modelNumber: string;
+        location: string;
+        productName: string;
+        remarks: string
+    }) => {
         try {
             const response = await axios.put(`/api/items/${id}`, updatedValues);
             console.log('Update success:', response.data);
@@ -80,8 +85,8 @@ export default function InventoryDashboard({ auth }: PageProps) {
             console.error('Error update item:', error);
         }
     };
-
-    const handleEditButtonClick = (item: any) => {
+    //編集後更新処理
+    const handleEditButtonClick = (item: {id: number}) => {
         const isLightRed = btnEditChangeColors[item.id] === 'lightred';
         if (isLightRed) {
             //更新する値
@@ -92,11 +97,12 @@ export default function InventoryDashboard({ auth }: PageProps) {
                 remarks: (document.getElementById(`remarks-${item.id}`) as HTMLInputElement).value
             };
             handleItemsUpdate(item.id, updatedValues);
+            // console.log(updatedValues);
         }
-        const newColor = isLightRed ? 'green' : 'lightred';
-        setbtnEditChangeColors(prev => ({
+        const changeColor = isLightRed ? 'green' : 'lightred';
+        setBtnEditChangeColors(prev => ({
             ...prev,
-            [item.id]: newColor
+            [item.id]: changeColor
         }));
     };
     return (
