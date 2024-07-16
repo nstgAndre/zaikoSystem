@@ -103,9 +103,9 @@ export default function InventoryDashboard({ auth }: PageProps) {
                 remarks: (document.getElementById(`remarks-${item.id}`) as HTMLInputElement).value
             };
             handleItemsUpdate(item.id, updatedValues);
-            // console.log(updatedValues);
+
         }
-        const changeColor = isLightRed ? 'green' : 'lightred';
+        const changeColor = isLightRed ? 'lightgreen' : 'lightred';
         setBtnEditChangeColors(prev => ({
             ...prev,
             [item.id]: changeColor
@@ -228,7 +228,7 @@ export default function InventoryDashboard({ auth }: PageProps) {
                                             <td className="py-3 px-4 text-center">
                                                 <div className="flex items-center justify-center ">
                                                     <DangerButton
-                                                        bgColor={btnEditChangeColors[item.id] === 'lightred' ? 'bg-lightred' : 'bg-green'}
+                                                        bgColor={btnEditChangeColors[item.id] === 'lightred' ? 'bg-lightred' : 'bg-lightgreen'}
                                                         onClick={() => handleEditButtonClick(item)}
                                                     >
                                                         <FontAwesomeIcon icon={btnEditChangeColors[item.id] === 'lightred' ? faArrowsRotate : faPen} />
