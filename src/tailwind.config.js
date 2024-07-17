@@ -16,7 +16,7 @@ export default {
                 deepblue: '#02032C',
                 lightblue: '#69d8f0',
                 gold: '#e0c030',
-                green: '#1dc5a9',
+                lightgreen: '#1dc5a9',
                 lightred: '#f60606'
             },
             fontFamily: {

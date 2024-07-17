@@ -18,7 +18,7 @@ export const useInventoryItemState = () => {
     const [bulkData, setBulkData] = useState('');
     const [showRegisterModal, setShowRegisterModal] = useState(false);
     const [showStockModal, setShowStockModal] = useState(false);
-    const [btnChangeColor, setBtnChangeColor] = useState('green');
+    const [btnChangeColor, setBtnChangeColor] = useState('lightgreen');
     const [activeButton, setActiveButton] = useState<number | null>(null);
     const [gridCols, setGridCols] = useState('grid-cols-7');
     const [btnEditChangeColors,setBtnEditChangeColors] = useState<{ [key: string]: string }>({});
