@@ -1,6 +1,4 @@
 import { Head } from '@inertiajs/react';
-import axios from 'axios';
-import React, { useEffect } from 'react';
 import { ThreeDots as Loader } from 'react-loader-spinner';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import DangerButton from '@/Components/DangerButton';
@@ -15,7 +13,7 @@ import { useDownloadCsv } from '@/features/DownloadCsv';
 import { usePagenateSearchFilter } from '@/features/PagenateSearchFilter';
 import { useMasterCheckbox } from '@/features/MasterCheckbox';
 import StorageRegister from '@/Pages/Layouts/StorageRegister';
-import DeliverRegister from '@/Pages/Layouts/DeliverRegister';
+import { useEditUpdate } from '@/features/EditAndUpdate';
 
 
 export default function InventoryDashboard({ auth }: PageProps) {
@@ -25,12 +23,6 @@ export default function InventoryDashboard({ auth }: PageProps) {
         setShowRegisterModal,
         searchValue,
         setSearchValue,
-        showStockModal,
-        setShowStockModal,
-        btnEditChangeColors,
-        setBtnEditChangeColors,
-        // gridCols,
-        setGridCols
     } = useInventoryItemState();
 
     const {
@@ -38,7 +30,6 @@ export default function InventoryDashboard({ auth }: PageProps) {
         loading,
         checkBox, setCheckBox,
         fetchData
-        // errorMessage
     } = useFetchItemsData();
 
     const {
@@ -58,59 +49,11 @@ export default function InventoryDashboard({ auth }: PageProps) {
         itemsDisplayed, handlePageClick
     } = usePagenateSearchFilter({ items, searchValue });
 
+    const {
+        handleEditButtonClick,btnEditChangeColors,setGridCols
+    } = useEditUpdate(fetchData);
     const { handleMasterCheckboxChange } = useMasterCheckbox(checkBox, setCheckBox);
-    const getSelectedItems = () => {
-        if (!Array.isArray(items)) {
-            return [];
-        }
-        return items.filter(item => checkBox[item.id]);
-    };
 
-    //編集ボタン処理
-    useEffect(() => {
-        if (Object.values(btnEditChangeColors).includes('lightred')) {
-            setGridCols('grid-cols-8');
-        } else {
-            setGridCols('grid-cols-7');
-        }
-    }, [btnEditChangeColors, setGridCols]);
-
-    //編集後データベース更新処理
-    const handleItemsUpdate = async (id: number, updatedValues: {
-        modelNumber: string;
-        location: string;
-        productName: string;
-        remarks: string
-    }) => {
-        try {
-            const response = await axios.put(`/api/items/${id}`, updatedValues);
-            console.log('Update success:', response.data);
-                await fetchData();
-        } catch (error) {
-            console.error('Error update item:', error);
-        }
-    };
-
-    //編集後更新処理
-    const handleEditButtonClick = (item: {id: number}) => {
-        const isLightRed = btnEditChangeColors[item.id] === 'lightred';
-        if (isLightRed) {
-            //更新する値
-            const updatedValues = {
-                productName: (document.getElementById(`productName-${item.id}`) as HTMLInputElement).value,
-                modelNumber: (document.getElementById(`modelNumber-${item.id}`) as HTMLInputElement).value,
-                location: (document.getElementById(`location-${item.id}`) as HTMLInputElement).value,
-                remarks: (document.getElementById(`remarks-${item.id}`) as HTMLInputElement).value
-            };
-            handleItemsUpdate(item.id, updatedValues);
-
-        }
-        const changeColor = isLightRed ? 'lightgreen' : 'lightred';
-        setBtnEditChangeColors(prev => ({
-            ...prev,
-            [item.id]: changeColor
-        }));
-    };
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -140,16 +83,11 @@ export default function InventoryDashboard({ auth }: PageProps) {
                                 <DangerButton onClick={() => setShowRegisterModal(true)} className="text-white border-2 !bg-deepblue !border-lightblue rounded-md mb-2 !focus:ring-blue-500">
                                     入庫記録
                                 </DangerButton>
-                                <DangerButton onClick={() => setShowStockModal(true)} className="text-white border-2 !bg-deepblue !border-lightblue rounded-md mb-2 !focus:ring-blue-500">
-                                    出庫登録
-                                </DangerButton>
                                 <DangerButton onClick={handleDownloadCsv} className="text-white border-2 !bg-deepblue !border-lightblue rounded-md mb-2 !focus:ring-blue-500">
                                     CSVダウンロード
                                 </DangerButton>
                             </div>
-
                             <StorageRegister isOpen={showRegisterModal} onClose={() => setShowRegisterModal(false)} />
-                            <DeliverRegister isOpen={showStockModal} onClose={() => setShowStockModal(false)} selectedItems={getSelectedItems()} />
                         </div>
 
                         <div className="overflow-hidden shadow-sm sm:rounded-lg">
@@ -163,7 +101,6 @@ export default function InventoryDashboard({ auth }: PageProps) {
                                                 onChange={handleMasterCheckboxChange}
                                             />
                                         </th>
-                                        {/* <th className="py-3 px-4 text-center">No</th> */}
                                         <th className="py-3 px-4 text-center">商品名</th>
                                         <th className="py-3 px-4 text-center">型番</th>
                                         <th className="py-3 px-4 text-center">納品場所</th>
