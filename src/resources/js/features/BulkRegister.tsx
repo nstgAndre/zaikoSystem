@@ -3,10 +3,6 @@ import { useInventoryItemState } from '@/hooks/InventoryItems';
 import React from "react";
 
 export const useBulkData = () => {
-// interface BulkAddResponse {
-//     success: boolean;
-//     message: string;
-// }
 
     const {bulkData, setBulkData} = useInventoryItemState();
     const {successMessage, setSuccessMessage} = useInventoryItemState();
