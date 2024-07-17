@@ -221,14 +221,14 @@ export default function InventoryDashboard({ auth }: PageProps) {
                         &gt;
                     </button>
                 </div>
-                <div className="p-6 text-white border-2 border-blue-500 p-4 mt-4 rounded">
+                {/* <div className="p-6 text-white border-2 border-blue-500 p-4 mt-4 rounded">
                     リアルタイム通知履歴
                     {downloadCsvError && (
                         <div className="mt-2 text-red-500">
                             {downloadCsvError}
                         </div>
                     )}
-                </div>
+                </div> */}
             </div>
         </AuthenticatedLayout>
     );
