@@ -15,7 +15,6 @@ import { useMasterCheckbox } from '@/features/MasterCheckbox';
 import StorageRegister from '@/Pages/Layouts/StorageRegister';
 import { useEditUpdate } from '@/features/EditAndUpdate';
 
-
 export default function InventoryDashboard({ auth }: PageProps) {
     // 入庫記録モーダルの状態管理
     const {
@@ -41,7 +40,6 @@ export default function InventoryDashboard({ auth }: PageProps) {
 
     const {
         handleDownloadCsv,
-        csvFileName,
     } = useDownloadCsv(checkBox, setCheckBox);
 
     const {
@@ -90,7 +88,7 @@ export default function InventoryDashboard({ auth }: PageProps) {
                                     CSVダウンロード
                                 </DangerButton>
                             </div>
-                            <StorageRegister isOpen={showRegisterModal} onClose={() => setShowRegisterModal(false)} />
+                            <StorageRegister isOpen={showRegisterModal} onClose={() => { setShowRegisterModal(false); fetchData(); }} fetchData={fetchData} />
                         </div>
 
                         <div className="overflow-hidden shadow-sm sm:rounded-lg">

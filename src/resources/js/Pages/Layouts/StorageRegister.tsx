@@ -4,10 +4,11 @@ import React from 'react';
 interface StorageRegisterProps {
     isOpen: boolean;
     onClose: () => void;
+    fetchData: () => void; 
 }
 
-const StorageRegister: React.FC<StorageRegisterProps> = ({ isOpen, onClose }) => {
-    const { bulkData, setBulkData, bulkHandleSubmit,successMessage} = useBulkData();
+const StorageRegister: React.FC<StorageRegisterProps> = ({ isOpen, onClose, fetchData }) => {
+    const { bulkData, setBulkData, bulkHandleSubmit, successMessage } = useBulkData();
 
     return (
         <Modal show={isOpen} onClose={onClose}>
@@ -23,8 +24,9 @@ const StorageRegister: React.FC<StorageRegisterProps> = ({ isOpen, onClose }) =>
                             <tr>
                                 <td className="py-3 px-4 flex flex-col items-center justify-center">
                                     <label htmlFor="taskDetail" className="text-red-600 mr-4">
-                                        ※商品名,型番,納品場所,入庫数量,備考をカンマ区切りで入力すると一括登録されます
+                                        ※商品名,型番,納品場所,入庫数量,備考をカンマ区切りで入力すると一括登録されます。
                                     </label>
+                                    "例:サーバー,DL360,櫻井倉庫,100,代理名"
                                     <input
                                         type="text"
                                         value={bulkData}

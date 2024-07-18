@@ -16,6 +16,7 @@ export const useBulkData = () => {
             });
             const response = await axios.post('/api/items/bulk', { items });
             setSuccessMessage(response.data.success);
+  
         } catch (error) {
             console.error('Error posting bulk items:', error);
         }
