@@ -54,9 +54,7 @@ export default function InventoryDashboard({ auth }: PageProps) {
         handleEditButtonClick,btnEditChangeColors
     } = useEditUpdate(fetchData);
 
-    const { handleMasterCheckboxChange } = useMasterCheckbox(checkBox, setCheckBox);
-
-    
+    const { handleMasterCheckboxChange } = useMasterCheckbox(checkBox, setCheckBox)
 
     return (
         <AuthenticatedLayout
@@ -88,6 +86,7 @@ export default function InventoryDashboard({ auth }: PageProps) {
                                     入庫記録
                                 </DangerButton>
                                 <DangerButton onClick={() => handleDownloadCsv()} className="text-white border-2 !bg-deepblue !border-lightblue rounded-md mb-2 !focus:ring-blue-500">
+                   
                                     CSVダウンロード
                                 </DangerButton>
                             </div>
