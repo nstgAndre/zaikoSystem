@@ -22,7 +22,7 @@ export const useDownloadCsv = (checkBox: { [key: string]: boolean }, setCheckBox
                     'Content-Type': 'application/json'
                 }
             });
-            console.log(response);
+            
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
@@ -39,5 +39,5 @@ export const useDownloadCsv = (checkBox: { [key: string]: boolean }, setCheckBox
         }
     };
 
-    return { errorMessage, handleDownloadCsv, csvFileName };
+    return { errorMessage, handleDownloadCsv };
 };

@@ -162,11 +162,11 @@ class ItemController extends Controller
         $items = $request->input('items', []);
         foreach ($items as $itemData) {
             $item = new Item();
+            Log::info('Received items for processing', ['items' => $items]);
             $item->productName = $itemData['productName'];
             $item->modelNumber = $itemData['modelNumber'];
             $item->location = $itemData['location'];
             $item->inItem = $itemData['inItem'];
-            $item->inventoryItem = $itemData['inItem'];
             $item->remarks = $itemData['remarks'];
             $item->save();
         }
