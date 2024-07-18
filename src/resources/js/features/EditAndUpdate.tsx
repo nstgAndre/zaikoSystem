@@ -70,5 +70,5 @@ export const useEditUpdate = (fetchData: () => Promise<void>) => {
         }));
     };
 
-    return {handleEditButtonClick,handleItemsUpdate,btnEditChangeColors,setGridCols};
+    return {handleEditButtonClick,handleItemsUpdate,btnEditChangeColors};
 };

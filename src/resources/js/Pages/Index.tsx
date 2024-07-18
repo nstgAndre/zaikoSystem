@@ -28,7 +28,8 @@ export default function InventoryDashboard({ auth }: PageProps) {
     const {
         items=[],
         loading,
-        checkBox, setCheckBox,
+        checkBox,
+        setCheckBox,
         fetchData
     } = useFetchItemsData();
 
@@ -40,7 +41,7 @@ export default function InventoryDashboard({ auth }: PageProps) {
 
     const {
         handleDownloadCsv,
-        errorMessage: downloadCsvError
+        csvFileName,
     } = useDownloadCsv(checkBox, setCheckBox);
 
     const {
@@ -50,9 +51,12 @@ export default function InventoryDashboard({ auth }: PageProps) {
     } = usePagenateSearchFilter({ items, searchValue });
 
     const {
-        handleEditButtonClick,btnEditChangeColors,setGridCols
+        handleEditButtonClick,btnEditChangeColors
     } = useEditUpdate(fetchData);
+
     const { handleMasterCheckboxChange } = useMasterCheckbox(checkBox, setCheckBox);
+
+    
 
     return (
         <AuthenticatedLayout
@@ -83,7 +87,7 @@ export default function InventoryDashboard({ auth }: PageProps) {
                                 <DangerButton onClick={() => setShowRegisterModal(true)} className="text-white border-2 !bg-deepblue !border-lightblue rounded-md mb-2 !focus:ring-blue-500">
                                     入庫記録
                                 </DangerButton>
-                                <DangerButton onClick={handleDownloadCsv} className="text-white border-2 !bg-deepblue !border-lightblue rounded-md mb-2 !focus:ring-blue-500">
+                                <DangerButton onClick={() => handleDownloadCsv()} className="text-white border-2 !bg-deepblue !border-lightblue rounded-md mb-2 !focus:ring-blue-500">
                                     CSVダウンロード
                                 </DangerButton>
                             </div>
@@ -105,9 +109,8 @@ export default function InventoryDashboard({ auth }: PageProps) {
                                         <th className="py-3 px-4 text-center">型番</th>
                                         <th className="py-3 px-4 text-center">納品場所</th>
                                         {Object.values(btnEditChangeColors).includes('lightred') && (
-                                            <th className="py-3 px-4 text-center">出庫数量</th>
+                                            <th className="py-3 px-4 text-center">数量変更</th>
                                         )}
-
                                         <th className="py-3 px-4 text-center">在庫数量</th>
                                         <th className="py-3 px-4 text-center">備考</th>
                                         <th className="py-3 px-4 text-center">編集</th>
@@ -221,14 +224,6 @@ export default function InventoryDashboard({ auth }: PageProps) {
                         &gt;
                     </button>
                 </div>
-                {/* <div className="p-6 text-white border-2 border-blue-500 p-4 mt-4 rounded">
-                    リアルタイム通知履歴
-                    {downloadCsvError && (
-                        <div className="mt-2 text-red-500">
-                            {downloadCsvError}
-                        </div>
-                    )}
-                </div> */}
             </div>
         </AuthenticatedLayout>
     );
