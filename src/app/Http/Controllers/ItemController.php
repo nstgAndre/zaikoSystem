@@ -134,6 +134,7 @@ class ItemController extends Controller
     public function csv(Request $request)
     {
         $ids = $request->input('ids', []);
+        $fileName = $request->input('fileName');
         $items = Item::whereIn('id', $ids)->get();
         $selectItems = new \Laracsv\Export();
         $selectItems->build($items, [
@@ -148,13 +149,12 @@ class ItemController extends Controller
             'created_at' => '登録日'
         ]);
         $csvReader = $selectItems->getReader();
-
+    
         $csvReader->setOutputBOM(\League\Csv\Reader::BOM_UTF8);
-        $filename = 'items.csv';
-
+    
         return response((string) $csvReader)
             ->header('Content-Type', 'text/csv; charset=UTF-8')
-            ->header('Content-Disposition', 'attachment; filename="'.$filename.'"');
+            ->header('Content-Disposition', 'attachment; filename="'.$fileName.'"');
     }
 
     public function insItemBulk(Request $request)
