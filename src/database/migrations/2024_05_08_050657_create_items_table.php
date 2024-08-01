@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('modelNumber', 255)->comment('型番');
             $table->string('location', 255)->comment('納品場所');
             $table->integer('inventoryItem')->comment('初期在庫数量');
-            $table->integer('quantity')->comment('在庫数');
+            $table->integer('quantityChange')->default(0)->comment('数量変更');
             $table->string('remarks', 255)->nullable()->comment('備考');
             $table->timestamps();
         });

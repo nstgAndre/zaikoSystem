@@ -1,4 +1,5 @@
 import { Head } from '@inertiajs/react';
+import React  from 'react';
 import { ThreeDots as Loader } from 'react-loader-spinner';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import DangerButton from '@/Components/DangerButton';
@@ -84,7 +85,7 @@ export default function InventoryDashboard({ auth }: PageProps) {
                                     入庫記録
                                 </DangerButton>
                                 <DangerButton onClick={() => handleDownloadCsv()} className="text-white border-2 !bg-deepblue !border-lightblue rounded-md mb-2 !focus:ring-blue-500">
-                   
+
                                     CSVダウンロード
                                 </DangerButton>
                             </div>
@@ -149,7 +150,7 @@ export default function InventoryDashboard({ auth }: PageProps) {
                                             </td>
                                             {btnEditChangeColors[item.id] === 'lightred' && (
                                                 <td className="py-3 px-4 text-center">
-                                                    <input type="text" inputMode="numeric" className="w-full text-center bg-deepblue" />
+                                                    <input type="number" inputMode="numeric" placeholder="+-の半角数字"  id={`quantityChange-${item.id}`} className="w-full text-center bg-deepblue" />
                                                 </td>
                                             )}
                                             <td className="py-3 px-4 text-center">{item.inventoryItem}</td>
