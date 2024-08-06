@@ -67,9 +67,6 @@ Route::middleware('auth')->group(function () {
     Route::put('/api/items/{id}', [ItemController::class, 'updateItemDetails']);
 });
 
-    Route::middleware('auth')->group(function () {
-    Route::post('/api/items/update', [ItemController::class, 'update']);
-});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -82,8 +79,7 @@ require __DIR__.'/auth.php';
 
 #2　変更します。
 Route::get('/items', [ItemController::class, 'index']);
-// Route::get('/items/create', [ItemController::class, 'create'])->name('items.create');
-// Route::post('/items', [ItemController::class, 'store'])->name('items.store');
+
 
 #3 変更します。
 Route::get('/items/createTest', [ItemController::class, 'create'])->name('items.createTest');

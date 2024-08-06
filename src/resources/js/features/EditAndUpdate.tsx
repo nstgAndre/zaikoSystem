@@ -19,9 +19,10 @@ export const useEditUpdate = (fetchData: () => Promise<void>) => {
     const handleItemsUpdate = async (
         id: number,
         updatedValues: {
+            productName: string;
             modelNumber: string;
             location: string;
-            productName: string;
+            quantityChange: number;
             remarks: string;
         }
     ) => {
@@ -30,7 +31,11 @@ export const useEditUpdate = (fetchData: () => Promise<void>) => {
             console.log("Update success:", response.data);
             await fetchData();
         } catch (error) {
-            console.error("Error update item:", error);
+            if (axios.isAxiosError(error) && error.response) {
+                console.error("Error update item:", error.response.data)
+            } else {
+                console.error("Error update item:", error);
+            }
         }
     };
 
@@ -39,7 +44,13 @@ export const useEditUpdate = (fetchData: () => Promise<void>) => {
         const isLightRed = btnEditChangeColors[item.id] === "lightred";
         if (isLightRed) {
             //更新する値
-            const updatedValues = {
+            const updatedValues: {
+                productName: string;
+                modelNumber: string;
+                location: string;
+                remarks: string;
+                quantityChange: number;
+            } = {
                 productName: (
                     document.getElementById(
                         `productName-${item.id}`
@@ -60,7 +71,17 @@ export const useEditUpdate = (fetchData: () => Promise<void>) => {
                         `remarks-${item.id}`
                     ) as HTMLInputElement
                 ).value,
+                quantityChange: 0 
             };
+
+            const quantityChangeInput = document.getElementById(
+                `quantityChange-${item.id}`
+            ) as HTMLInputElement;
+            
+            if (quantityChangeInput && quantityChangeInput.value.trim() !== '') {
+                updatedValues.quantityChange = parseInt(quantityChangeInput.value);
+            }
+
             handleItemsUpdate(item.id, updatedValues);
         }
         const changeColor = isLightRed ? "lightgreen" : "lightred";
