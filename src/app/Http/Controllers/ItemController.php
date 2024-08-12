@@ -40,8 +40,6 @@ class ItemController extends Controller
             'productName' => '商品名',
             'modelNumber' => '型番',
             'location' => '場所',
-            'inItem' => '入庫数',
-            'outItem' => '出庫数',
             'inventoryItem' => '在庫数',
             'remarks' => '備考',
             'created_at' => '登録日'

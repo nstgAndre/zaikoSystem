@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id()->comment('入庫ID');
             $table->integer('item_id')->comment('商品ID'); 
             $table->integer('inItem')->comment('入庫数量');
+            $table->date('registration_date')->comment('登録日');
             $table->timestamps();
         });
     }
