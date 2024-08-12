@@ -25,6 +25,7 @@ class ItemsRequest extends FormRequest
             'productName' => 'required|string',
             'modelNumber' => 'required|string',
             'location' => 'required|string',
+            'quantityChange' => 'required|numeric',
             'remarks' => 'nullable|string',
         ];
     }
