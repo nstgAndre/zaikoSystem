@@ -48,7 +48,7 @@ export default function InventoryDashboard({ auth }: PageProps) {
         pageCount,
         itemsDisplayed, handlePageClick
     } = usePagenateSearchFilter({ items, searchValue });
-
+console.log(itemsDisplayed);
     const {
         handleEditButtonClick,btnEditChangeColors
     } = useEditUpdate(fetchData);

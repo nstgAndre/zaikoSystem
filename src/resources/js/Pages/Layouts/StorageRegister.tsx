@@ -26,7 +26,7 @@ const StorageRegister: React.FC<StorageRegisterProps> = ({ isOpen, onClose, fetc
                                     <label htmlFor="taskDetail" className="text-red-600 mr-4">
                                         ※商品名,型番,納品場所,入庫数量,備考をカンマ区切りで入力すると一括登録されます。
                                     </label>
-                                    "例:サーバー,DL360,櫻井倉庫,100,代理名"
+                                    <p className="text-white">例:サーバー,DL360,櫻井倉庫,100,代理名</p>
                                     <input
                                         type="text"
                                         value={bulkData}
