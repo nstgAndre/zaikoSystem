@@ -62,7 +62,7 @@ class ItemController extends Controller
             $item->productName = $itemData['productName'];
             $item->modelNumber = $itemData['modelNumber'];
             $item->location = $itemData['location'];
-            $item->inItem = $itemData['inItem'];
+            $item->inventoryItem = $itemData['inventoryItem'];
             $item->remarks = $itemData['remarks'];
             $item->save();
         }

@@ -2,8 +2,8 @@ import axios from 'axios';
 import { useInventoryItemState } from '@/hooks/InventoryItems';
 import React from "react";
 
-export const useBulkData = () => {
 
+export const useBulkData = () => {
     const {bulkData, setBulkData} = useInventoryItemState();
     const {successMessage, setSuccessMessage} = useInventoryItemState();
 
@@ -11,8 +11,8 @@ export const useBulkData = () => {
         event.preventDefault();
         try {
             const items = bulkData.split('\n').map(item => {
-                const [productName, modelNumber, location, inItem, remarks] = item.split(',').map(part => part.trim());
-                return { productName, modelNumber, location, inItem: parseInt(inItem), remarks };  //APIのリクエストに返す
+                const [productName, modelNumber, location, inventoryItem, remarks] = item.split(',').map(part => part.trim());
+                return { productName, modelNumber, location, inventoryItem, remarks };//APIのリクエストに返す
             });
             const response = await axios.post('/api/items/bulk', { items });
             setSuccessMessage(response.data.success);
