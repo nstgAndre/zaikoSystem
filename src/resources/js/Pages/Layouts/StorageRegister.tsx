@@ -1,6 +1,6 @@
-import { useBulkData } from '@/features/BulkRegister';
 import Modal from '@/Components/Modal';
-import React from 'react';
+import { useBulkData } from '@/features/BulkRegister';
+import type React from 'react';
 interface StorageRegisterProps {
     isOpen: boolean;
     onClose: () => void;
@@ -13,8 +13,13 @@ const StorageRegister: React.FC<StorageRegisterProps> = ({ isOpen, onClose, fetc
     return (
         <Modal show={isOpen} onClose={onClose}>
             <div className="relative">
-                <button onClick={onClose} className="absolute right-3 top-3 text-white text-2xl h-8 w-8 flex items-center justify-center bg-transparent hover:bg-gray-500 rounded-full">
+                <button 
+                    type="button" 
+                    onClick={onClose} 
+                    className="absolute right-3 top-3 text-white text-2xl h-8 w-8 flex items-center justify-center bg-transparent hover:bg-gray-500 rounded-full"
+                >
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" width="24" height="24">
+                        <title>閉じる</title>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>

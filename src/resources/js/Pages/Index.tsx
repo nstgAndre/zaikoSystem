@@ -1,23 +1,21 @@
-import { Head } from '@inertiajs/react';
-import React  from 'react';
-import { ThreeDots as Loader } from 'react-loader-spinner';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import DangerButton from '@/Components/DangerButton';
-import { PageProps } from '@/types';
 import Modal from '@/Components/Modal';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFilter, faPen, faArrowsRotate } from '@fortawesome/free-solid-svg-icons';
-import { useInventoryItemState } from '@/hooks/InventoryItems';
-import { useFetchItemsData } from '@/functions/FetchItemsData';
-import { useModalRemark } from '@/features/ModalRemark';
-import { useDownloadCsv } from '@/features/DownloadCsv';
-import { usePagenateSearchFilter } from '@/features/PagenateSearchFilter';
-import { useMasterCheckbox } from '@/features/MasterCheckbox';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import StorageRegister from '@/Pages/Layouts/StorageRegister';
+import { useDownloadCsv } from '@/features/DownloadCsv';
 import { useEditUpdate } from '@/features/EditAndUpdate';
+import { useMasterCheckbox } from '@/features/MasterCheckbox';
+import { useModalRemark } from '@/features/ModalRemark';
+import { usePagenateSearchFilter } from '@/features/PagenateSearchFilter';
+import { useFetchItemsData } from '@/functions/FetchItemsData';
+import { useInventoryItemState } from '@/hooks/InventoryItems';
+import type { PageProps } from '@/types';
+import { faArrowsRotate, faFilter, faPen } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Head } from '@inertiajs/react';
+import { ThreeDots as Loader } from 'react-loader-spinner';
 
 export default function InventoryDashboard({ auth }: PageProps) {
-    // 入庫記録モーダルの状態管理
     const {
         showRegisterModal,
         setShowRegisterModal,
@@ -48,7 +46,7 @@ export default function InventoryDashboard({ auth }: PageProps) {
         pageCount,
         itemsDisplayed, handlePageClick
     } = usePagenateSearchFilter({ items, searchValue });
-console.log(itemsDisplayed);
+
     const {
         handleEditButtonClick,btnEditChangeColors
     } = useEditUpdate(fetchData);
@@ -182,12 +180,14 @@ console.log(itemsDisplayed);
                                     <h3 className="text-lg font-semibold">備考詳細</h3>
                                     <p>{selectedRemark}</p>
                                     <button
+                                        type="button"
                                         onClick={closeModal}
                                         className="absolute top-0 right-0 p-2 text-lg font-bold"
                                         aria-label="Close"
                                     >
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                            stroke="currentColor" strokeWidth="2" width="24" height="24">
+                                            stroke="currentColor" strokeWidth="2" width="24" height="24" role="img" aria-labelledby="closeIconTitle">
+                                            <title id="closeIconTitle">閉じる</title>
                                             <path strokeLinecap="round" strokeLinejoin="round"
                                                 d="M6 18L18 6M6 6l12 12" />
                                         </svg>
@@ -207,6 +207,7 @@ console.log(itemsDisplayed);
                     </button>
                     {Array.from({ length: pageCount }, (_, index) => (
                         <button
+                            type="button"
                             key={index}
                             onClick={() => handlePageClick(index)}
                             className={`px-3 py-1 mx-1 ${index === currentPage ? 'bg-blue-700' : 'bg-blue-500'} text-white rounded`}
@@ -215,6 +216,7 @@ console.log(itemsDisplayed);
                         </button>
                     ))}
                     <button
+                        type="button"
                         onClick={() => handlePageClick(currentPage + 1)}
                         disabled={currentPage === pageCount - 1}
                         className="px-3 py-1 mx-1 bg-blue-500 text-white rounded disabled:opacity-50"
