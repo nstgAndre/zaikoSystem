@@ -3,9 +3,11 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "tsc && vite build"
+        "build": "tsc && vite build",
+        "check": "npx biome check ./resources/js"
     },
     "devDependencies": {
+        "@biomejs/biome": "1.9.2",
         "@eslint/js": "^9.2.0",
         "@headlessui/react": "^1.4.2",
         "@inertiajs/react": "^1.0.0",
