@@ -1,7 +1,7 @@
-import { useEffect } from "react";
-import axios from 'axios';
-import type { InventoryItem } from '@/types/inventoryItems';
 import { useInventoryItemState } from '@/hooks/InventoryItems';
+import type { InventoryItem } from '@/types/inventoryItems';
+import axios from 'axios';
+import { useEffect } from "react";
 
 export const useFetchItemsData = () => {
     const {

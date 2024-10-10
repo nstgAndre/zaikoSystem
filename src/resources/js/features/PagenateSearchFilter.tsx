@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
-import { InventoryItem } from '@/types/inventoryItems';
 import { useInventoryItemState } from '@/hooks/InventoryItems';
+import type { InventoryItem } from '@/types/inventoryItems';
+import { useEffect } from 'react';
 
 interface Props {
     items: InventoryItem[];
@@ -21,18 +21,27 @@ export const usePagenateSearchFilter = ({ items, searchValue }: Props) => {
 
     useEffect(() => {
         if (!Array.isArray(items)) return; // itemsが配列であることを確認
+
         const normalizedSearchValue = normalizeSearchString(searchValue);
+
+        // 検索値に基づくフィルタリング
         const filtered = items.filter(item =>
             normalizeSearchString(item.productName).includes(normalizedSearchValue) ||
             normalizeSearchString(item.modelNumber).includes(normalizedSearchValue) ||
             normalizeSearchString(item.location).includes(normalizedSearchValue) ||
             normalizeSearchString(item.remarks).includes(normalizedSearchValue)
         );
-        filtered.sort((a, b) => b.id - a.id); //降順に並び替え
+
+        // 降順に並び替え
+        filtered.sort((a, b) => b.id - a.id);
+
+        // 状態更新
         setFilteredItems(filtered);
         setPageCount(Math.ceil(filtered.length / itemsPerPage));
         setCurrentPage(0);
-    }, [searchValue, items]);
+
+    }, [searchValue, items, itemsPerPage, normalizeSearchString, setFilteredItems]);
+
 
     const handlePageClick = (page: number) => {
         setCurrentPage(page);

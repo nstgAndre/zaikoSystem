@@ -1,5 +1,5 @@
-import axios from 'axios';
 import { useInventoryItemState } from '@/hooks/InventoryItems';
+import axios from 'axios';
 
 export const useDownloadCsv = (checkBox: { [key: string]: boolean }, setCheckBox: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>) => {
     const {errorMessage, setErrorMessage} = useInventoryItemState();
@@ -22,7 +22,7 @@ export const useDownloadCsv = (checkBox: { [key: string]: boolean }, setCheckBox
                     'Content-Type': 'application/json'
                 }
             });
-            
+
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;

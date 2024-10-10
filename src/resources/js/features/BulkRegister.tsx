@@ -1,6 +1,6 @@
-import axios from 'axios';
 import { useInventoryItemState } from '@/hooks/InventoryItems';
-import React from "react";
+import axios from 'axios';
+import type React from "react";
 
 
 export const useBulkData = () => {
@@ -16,7 +16,7 @@ export const useBulkData = () => {
             });
             const response = await axios.post('/api/items/bulk', { items });
             setSuccessMessage(response.data.success);
-  
+
         } catch (error) {
             console.error('Error posting bulk items:', error);
         }

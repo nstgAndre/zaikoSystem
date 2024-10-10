@@ -199,6 +199,7 @@ export default function InventoryDashboard({ auth }: PageProps) {
                 )}
                 <div className="flex justify-center mt-4">
                     <button
+                        type="button"
                         onClick={() => handlePageClick(currentPage - 1)}
                         disabled={currentPage === 0}
                         className="px-3 py-1 mx-1 bg-blue-500 text-white rounded disabled:opacity-50"

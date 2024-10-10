@@ -70,15 +70,15 @@ export const useEditUpdate = (fetchData: () => Promise<void>) => {
                         `remarks-${item.id}`
                     ) as HTMLInputElement
                 ).value,
-                quantityChange: 0 
+                quantityChange: 0
             };
 
             const quantityChangeInput = document.getElementById(
                 `quantityChange-${item.id}`
             ) as HTMLInputElement;
-            
+
             if (quantityChangeInput && quantityChangeInput.value.trim() !== '') {
-                updatedValues.quantityChange = parseInt(quantityChangeInput.value);
+                updatedValues.quantityChange = Number.parseInt(quantityChangeInput.value);
             }
 
             handleItemsUpdate(item.id, updatedValues);

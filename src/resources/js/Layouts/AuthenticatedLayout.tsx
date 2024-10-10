@@ -1,10 +1,10 @@
-import { useState, type PropsWithChildren, type ReactNode } from 'react';
 import ApplicationLogo from '@/Components/ApplicationLogo';
 import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
-import { Link } from '@inertiajs/react';
 import type { User } from '@/types';
+import { Link } from '@inertiajs/react';
+import {type PropsWithChildren, type ReactNode, useState } from 'react';
 
 export default function Authenticated({ user, header, children }: PropsWithChildren<{ user: User, header?: ReactNode }>) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
