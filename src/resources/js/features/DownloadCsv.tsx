@@ -3,6 +3,8 @@ import { useInventoryItemState } from '@/hooks/InventoryItems';
 
 export const useDownloadCsv = (checkBox: { [key: string]: boolean }, setCheckBox: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>) => {
     const {errorMessage, setErrorMessage} = useInventoryItemState();
+    const yearMonth = new Date().toISOString().slice(0, 7).replace('-', '');
+    const csvFileName=`${yearMonth}_棚卸し.csv`;
 
     const handleDownloadCsv = async () => {
         try {
@@ -15,15 +17,16 @@ export const useDownloadCsv = (checkBox: { [key: string]: boolean }, setCheckBox
                 url: '/api/items/csv',
                 method: 'POST',
                 responseType: 'blob',
-                data: { ids: selectedIds },
+                data: { ids: selectedIds, fileName: csvFileName  },
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
+            
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', 'items.csv');
+            link.setAttribute('download', `${csvFileName}`);
             document.body.appendChild(link);
             link.click();
             if (link.parentNode) {

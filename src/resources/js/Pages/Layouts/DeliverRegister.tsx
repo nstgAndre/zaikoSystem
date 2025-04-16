@@ -35,7 +35,7 @@ const DeliverRegister: React.FC<DeliverRegisterProps> = ({ isOpen, onClose, sele
         <input
             type="text"
             inputMode="numeric"
-            onChange={(e) => handleOutItemChange(item.id, parseInt(e.target.value) || 0)}
+            onChange={(e)=>handleOutItemChange(item.id,Number.parseInt(e.target.value)||0)}
             className="w-full text-center bg-deepblue"
         />
     );
