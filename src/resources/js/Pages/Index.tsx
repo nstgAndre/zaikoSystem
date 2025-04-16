@@ -14,7 +14,7 @@ import { faArrowsRotate, faFilter, faPen } from '@fortawesome/free-solid-svg-ico
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Head } from '@inertiajs/react';
 import { ThreeDots as Loader } from 'react-loader-spinner';
-
+import React from 'react';
 export default function InventoryDashboard({ auth }: PageProps) {
     const {
         showRegisterModal,
@@ -199,6 +199,7 @@ export default function InventoryDashboard({ auth }: PageProps) {
                 )}
                 <div className="flex justify-center mt-4">
                     <button
+                        type="button"
                         onClick={() => handlePageClick(currentPage - 1)}
                         disabled={currentPage === 0}
                         className="px-3 py-1 mx-1 bg-blue-500 text-white rounded disabled:opacity-50"

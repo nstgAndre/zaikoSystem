@@ -5,12 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a896a226-ea1d-411b-b3fb-a37e48c8472c" name="変更" comment="変更">
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/git_toolbox_blame.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/1" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/biome.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/git_toolbox_blame.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/git_toolbox_blame.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/src/.editorconfig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/.env.example" beforeDir="false" afterPath="$PROJECT_DIR$/src/.env.example" afterDir="false" />
@@ -57,6 +54,7 @@
       <change beforePath="$PROJECT_DIR$/src/app/Providers/EventServiceProvider.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/Providers/EventServiceProvider.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/Providers/RouteServiceProvider.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/Providers/RouteServiceProvider.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/artisan" beforeDir="false" afterPath="$PROJECT_DIR$/src/artisan" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/biome.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/biome.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/bootstrap/app.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/bootstrap/app.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/bootstrap/cache/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/src/bootstrap/cache/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/composer.json" afterDir="false" />
@@ -122,7 +120,6 @@
       <change beforePath="$PROJECT_DIR$/src/resources/js/Pages/Auth/Register.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/resources/js/Pages/Auth/Register.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/resources/js/Pages/Auth/ResetPassword.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/resources/js/Pages/Auth/ResetPassword.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/resources/js/Pages/Auth/VerifyEmail.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/resources/js/Pages/Auth/VerifyEmail.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/resources/js/Pages/Dashboard.tsx" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/resources/js/Pages/Index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/resources/js/Pages/Index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/resources/js/Pages/Layouts/DeliverRegister.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/resources/js/Pages/Layouts/DeliverRegister.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/resources/js/Pages/Layouts/StorageRegister.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/resources/js/Pages/Layouts/StorageRegister.tsx" afterDir="false" />
@@ -406,7 +403,8 @@
       <workItem from="1724656488343" duration="55000" />
       <workItem from="1726555380470" duration="338000" />
       <workItem from="1726557534388" duration="2000" />
-      <workItem from="1728274983559" duration="1475000" />
+      <workItem from="1728274983559" duration="1906000" />
+      <workItem from="1728284593196" duration="3978000" />
     </task>
     <servers />
   </component>
@@ -423,8 +421,12 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/resources/js/Pages/Index.tsx</url>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/resources/js/types/global.d.ts</url>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

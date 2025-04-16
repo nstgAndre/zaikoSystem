@@ -1,9 +1,10 @@
 import DangerButton from '@/Components/DangerButton';
 import Modal from '@/Components/Modal';
-import axios from 'axios';
-import React, { useState } from 'react';
-import { InventoryItem } from '@/types/inventoryItems';
 import { useModalRemark } from '@/features/ModalRemark';
+import type { InventoryItem } from '@/types/inventoryItems';
+import axios from 'axios';
+import { useState } from 'react';
+import type React from'react';
 
 interface DeliverRegisterProps {
     isOpen: boolean;
@@ -109,6 +110,7 @@ const DeliverRegister: React.FC<DeliverRegisterProps> = ({ isOpen, onClose, sele
                                 <h3 className="text-lg font-semibold">備考詳細</h3>
                                 <p>{selectedRemark}</p>
                                 <button
+                                    type="button"
                                     onClick={closeModal}
                                     className="absolute top-0 right-0 p-2 text-lg font-bold"
                                     aria-label="Close"

@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 
 
 export const useMasterCheckbox = (checkBox: { [key: string]: boolean }, setCheckBox: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>) => {
