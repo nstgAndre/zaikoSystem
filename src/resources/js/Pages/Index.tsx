@@ -14,7 +14,7 @@ import { faArrowsRotate, faFilter, faPen } from '@fortawesome/free-solid-svg-ico
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Head } from '@inertiajs/react';
 import { ThreeDots as Loader } from 'react-loader-spinner';
-
+import React from 'react';
 export default function InventoryDashboard({ auth }: PageProps) {
     const {
         showRegisterModal,

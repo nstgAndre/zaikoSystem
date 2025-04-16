@@ -1,6 +1,6 @@
 import { useInventoryItemState } from '@/hooks/InventoryItems';
 import type { InventoryItem } from '@/types/inventoryItems';
-import { useEffect } from 'react';
+import {useCallback, useEffect} from 'react';
 
 interface Props {
     items: InventoryItem[];
@@ -13,14 +13,14 @@ export const usePagenateSearchFilter = ({ items, searchValue }: Props) => {
     const {pageCount, setPageCount} = useInventoryItemState();
     const {itemsPerPage} = useInventoryItemState();
 
-    const normalizeSearchString = (str: string) => {
+    const normalizeSearchString = useCallback((str: string) => {
         if (!str) return "";
         return str.normalize("NFC").toUpperCase()
             .replace(/[Ａ-Ｚａ-ｚ０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
-    };
+    }, []);
 
     useEffect(() => {
-        if (!Array.isArray(items)) return; // itemsが配列であることを確認
+        if (!Array.isArray(items)) return;
 
         const normalizedSearchValue = normalizeSearchString(searchValue);
 
@@ -53,5 +53,3 @@ export const usePagenateSearchFilter = ({ items, searchValue }: Props) => {
 
     return { currentPage, pageCount, itemsDisplayed, handlePageClick };
 };
-
-export default usePagenateSearchFilter;
