@@ -18,6 +18,29 @@ services:
     ports:
       - "5173:5173"
     working_dir: /var/www/html/src
+  # --- リプレイス後スタック (Bun + Hono + React SPA) ---
+  api:
+    image: oven/bun:1
+    working_dir: /workspace
+    command: sh -c "bun install && cd apps/api && bun run dev"
+    volumes:
+      - .:/workspace
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+  spa:
+    image: oven/bun:1
+    working_dir: /workspace
+    command: sh -c "bun install && cd apps/web && bunx vite --host 0.0.0.0"
+    environment:
+      VITE_API_URL: http://api:3000
+    volumes:
+      - .:/workspace
+    ports:
+      - "5174:5174"
+    depends_on:
+      - api
   postgres:
     image: postgres:latest
     restart: always

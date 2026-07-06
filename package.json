@@ -1,0 +1,16 @@
+{
+  "name": "zaiko-system",
+  "private": true,
+  "type": "module",
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "check": "biome check apps packages",
+    "check:fix": "biome check --write apps packages",
+    "typecheck": "bun run --filter '*' typecheck",
+    "test": "bun run --filter '*' test"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.2",
+    "typescript": "^6.0.3"
+  }
+}
