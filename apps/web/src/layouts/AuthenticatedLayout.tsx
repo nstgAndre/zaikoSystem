@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router';
+import { Link, useRouterState } from '@tanstack/react-router';
 import { type PropsWithChildren, type ReactNode, useState } from 'react';
 import { Dropdown } from '../components/Dropdown';
 import { NavLink } from '../components/NavLink';
@@ -21,6 +21,8 @@ export function AuthenticatedLayout({
   children,
 }: PropsWithChildren<{ user: LayoutUser; header?: ReactNode }>) {
   const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
+  // 旧実装の route().current('index') 相当: 現在ルートで active を判定
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   const signOut = async () => {
     await authClient.signOut();
@@ -43,7 +45,7 @@ export function AuthenticatedLayout({
                 </Link>
               </div>
               <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                <NavLink to="/index" active={true} className="text-white">
+                <NavLink to="/index" active={pathname === '/index'} className="text-white">
                   在庫一覧
                 </NavLink>
               </div>

@@ -17,6 +17,7 @@ vi.mock('@tanstack/react-router', () => ({
       {children}
     </a>
   ),
+  useRouterState: () => '/index',
 }));
 
 vi.mock('../lib/auth-client', () => ({

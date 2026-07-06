@@ -27,10 +27,11 @@ export const useEditUpdate = (fetchData: () => Promise<void>) => {
       });
       const data = await response.json();
       if (!response.ok) {
+        // 旧実装は axios が非 2xx で throw するため再取得しない。同挙動を維持する
         console.error('Error update item:', data);
-      } else {
-        console.log('Update success:', data);
+        return;
       }
+      console.log('Update success:', data);
       await fetchData();
     } catch (error) {
       console.error('Error update item:', error);

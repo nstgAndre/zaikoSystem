@@ -140,24 +140,26 @@ describe('PUT /api/items/:id', () => {
     expect(ins.length).toBe(0);
   });
 
+  // 入出庫量は stock_ins.inItem / stock_outs.outItem の DB 全体 UNIQUE 制約と
+  // 実運用値が衝突しないよう、現実に出現しにくい希少値を使う
   it('正の quantityChange は入庫: stock_ins 追加 + 在庫加算', async () => {
-    const res = await putItem(itemId, { ...baseBody(), quantityChange: 5 });
+    const res = await putItem(itemId, { ...baseBody(), quantityChange: 9991 });
     const body = (await res.json()) as { message: string };
     expect(body.message).toBe('アイテムが正常に更新されました。 入庫処理が完了しました。');
-    expect(await getInventory()).toBe(15);
+    expect(await getInventory()).toBe(10001);
     const ins = await db.select().from(stockIns).where(eq(stockIns.itemId, itemId));
     expect(ins.length).toBe(1);
-    expect(ins[0]?.inItem).toBe(5);
+    expect(ins[0]?.inItem).toBe(9991);
   });
 
   it('負の quantityChange は出庫: stock_outs 追加 + 在庫減算', async () => {
-    const res = await putItem(itemId, { ...baseBody(), quantityChange: -3 });
+    const res = await putItem(itemId, { ...baseBody(), quantityChange: -9993 });
     const body = (await res.json()) as { message: string };
     expect(body.message).toBe('アイテムが正常に更新されました。 出庫処理が完了しました。');
-    expect(await getInventory()).toBe(12);
+    expect(await getInventory()).toBe(8);
     const outs = await db.select().from(stockOuts).where(eq(stockOuts.itemId, itemId));
     expect(outs.length).toBe(1);
-    expect(outs[0]?.outItem).toBe(3);
+    expect(outs[0]?.outItem).toBe(9993);
   });
 
   it('在庫不足の出庫は 200 のまま失敗メッセージ連結・在庫不変・編集は保存(現行仕様)', async () => {
@@ -172,7 +174,7 @@ describe('PUT /api/items/:id', () => {
     expect(body.message).toBe(
       'アイテムが正常に更新されました。 在庫数量の更新に失敗しました: エラー: 在庫不足のため出庫できません。',
     );
-    expect(await getInventory()).toBe(12);
+    expect(await getInventory()).toBe(8);
     const [row] = await db.select().from(items).where(eq(items.id, itemId));
     expect(row?.location).toBe('PR4-倉庫C');
     const outs = await db.select().from(stockOuts).where(eq(stockOuts.itemId, itemId));
@@ -183,7 +185,7 @@ describe('PUT /api/items/:id', () => {
     const res = await putItem(itemId, { ...baseBody(), quantityChange: '0' });
     const body = (await res.json()) as { message: string };
     expect(body.message).toBe('アイテムが正常に更新されました。 数量変更はありませんでした。');
-    expect(await getInventory()).toBe(12);
+    expect(await getInventory()).toBe(8);
   });
 
   it('存在しない id は 404 ではなく 500(現行仕様)', async () => {
