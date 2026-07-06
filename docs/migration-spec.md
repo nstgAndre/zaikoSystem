@@ -249,6 +249,8 @@ stock_ins と同構造(`inItem` → `outItem`、出庫ID/出庫数量)。item_id
 | inventoryItem | int | 可 | 変更後在庫スナップショット |
 | stock_in_id | bigint unsigned | 可 | FK → stock_ins.id **ON DELETE SET NULL** |
 | stock_out_id | bigint unsigned | 可 | FK → stock_outs.id **ON DELETE SET NULL** |
+| in_item | int | 可 | FK → stock_ins."inItem" **ON DELETE SET NULL**(一意列への FK) |
+| out_item | int | 可 | FK → stock_outs."outItem" **ON DELETE SET NULL**(同上) |
 | remarks | varchar(255) | 可 | |
 | created_at / updated_at | timestamp | 可 | |
 
