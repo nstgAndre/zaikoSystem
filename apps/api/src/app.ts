@@ -8,6 +8,11 @@ import { auth } from './auth';
  */
 const app = new Hono()
   .use('*', logger())
+  .onError((err, c) => {
+    // この API はすべて JSON を返す。Hono デフォルトの text/plain 500 を防ぐ
+    console.error(err);
+    return c.json({ message: 'Internal Server Error' }, 500);
+  })
   .on(['GET', 'POST'], '/api/auth/*', (c) => auth.handler(c.req.raw))
   .get('/health', (c) => c.json({ status: 'ok' }));
 

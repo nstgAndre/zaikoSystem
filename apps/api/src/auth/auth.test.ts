@@ -73,6 +73,30 @@ describe('POST /api/auth/sign-up/email', () => {
   });
 });
 
+describe('仕様外エンドポイントの無効化 (disabledPaths)', () => {
+  it('POST /api/auth/update-user は 404 を返す', async () => {
+    const loginRes = await signIn(TEST_EMAIL, TEST_PASSWORD);
+    const cookie = loginRes.headers.get('set-cookie') ?? '';
+
+    const res = await app.request('/api/auth/update-user', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', cookie },
+      body: JSON.stringify({ name: '書き換え' }),
+    });
+
+    expect(res.status).toBe(404);
+  });
+
+  it('GET /api/auth/list-sessions は 404 を返す', async () => {
+    const loginRes = await signIn(TEST_EMAIL, TEST_PASSWORD);
+    const cookie = loginRes.headers.get('set-cookie') ?? '';
+
+    const res = await app.request('/api/auth/list-sessions', { headers: { cookie } });
+
+    expect(res.status).toBe(404);
+  });
+});
+
 describe('requireAuth ミドルウェア', () => {
   const protectedApp = new Hono()
     .use('*', requireAuth)
