@@ -1,1 +1,11 @@
 @import "tailwindcss";
+@plugin '@tailwindcss/forms';
+
+/* 現行 Laravel 側 tailwind.config.js のカスタムカラーを踏襲 */
+@theme {
+  --color-deepblue: #02032c;
+  --color-lightblue: #69d8f0;
+  --color-gold: #e0c030;
+  --color-lightgreen: #1dc5a9;
+  --color-lightred: #f60606;
+}
