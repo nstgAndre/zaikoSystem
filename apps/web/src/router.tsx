@@ -8,6 +8,7 @@ import {
 import { authClient } from './lib/auth-client';
 import { IndexPage } from './pages/Index';
 import { LoginPage } from './pages/Login';
+import { ProfilePage } from './pages/Profile';
 
 const rootRoute = createRootRoute({
   component: Outlet,
@@ -33,7 +34,20 @@ const indexRoute = createRoute({
   component: IndexPage,
 });
 
-const routeTree = rootRoute.addChildren([loginRoute, indexRoute]);
+/** `/profile` = パスワード変更。未認証は `/`(ログイン)へリダイレクト。 */
+const profileRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/profile',
+  beforeLoad: async () => {
+    const { data } = await authClient.getSession();
+    if (!data) {
+      throw redirect({ to: '/' });
+    }
+  },
+  component: ProfilePage,
+});
+
+const routeTree = rootRoute.addChildren([loginRoute, indexRoute, profileRoute]);
 
 export const router = createRouter({ routeTree });
 
