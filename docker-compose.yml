@@ -33,6 +33,8 @@ services:
     image: oven/bun:1
     working_dir: /workspace
     command: sh -c "bun install && cd apps/web && bunx vite --host 0.0.0.0"
+    environment:
+      VITE_API_URL: http://api:3000
     volumes:
       - .:/workspace
     ports:
