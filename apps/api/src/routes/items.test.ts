@@ -201,3 +201,98 @@ describe('PUT /api/items/:id', () => {
     expect(res.status).toBe(422);
   });
 });
+
+describe('POST /api/items/bulk', () => {
+  it('文字列 inventoryItem のまま登録され stock_ins には記録されない(現行仕様)', async () => {
+    const res = await app.request('/api/items/bulk', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', cookie },
+      body: JSON.stringify({
+        items: [
+          {
+            productName: `${MARK}バルク`,
+            modelNumber: 'BULK-1',
+            location: 'バルク倉庫',
+            inventoryItem: '77',
+            remarks: 'カンマ入力',
+          },
+        ],
+      }),
+    });
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ success: 'アイテムが正常に登録されました。' });
+
+    const [row] = await db
+      .select()
+      .from(items)
+      .where(eq(items.productName, `${MARK}バルク`));
+    expect(row?.inventoryItem).toBe(77);
+    if (!row) throw new Error('bulk row not created');
+    const ins = await db.select().from(stockIns).where(eq(stockIns.itemId, row.id));
+    expect(ins.length).toBe(0);
+  });
+});
+
+describe('POST /api/items/csv', () => {
+  it('BOM 付き・laracsv 互換ヘッダ・選択行のみの CSV を返す', async () => {
+    const res = await app.request('/api/items/csv', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', cookie },
+      body: JSON.stringify({ ids: [String(itemId)], fileName: '202607_棚卸し.csv' }),
+    });
+
+    expect(res.status).toBe(200);
+    expect(res.headers.get('content-type')).toContain('text/csv');
+    const encoded = encodeURIComponent('202607_棚卸し.csv');
+    expect(res.headers.get('content-disposition')).toBe(
+      `attachment; filename="${encoded}"; filename*=UTF-8''${encoded}`,
+    );
+
+    const text = await res.text();
+    expect(text.startsWith('﻿')).toBe(true);
+    const lines = text.slice(1).trimEnd().split('\n');
+    expect(lines[0]).toBe('ID,商品名,型番,場所,在庫数,備考,登録日');
+    expect(lines.length).toBe(2);
+    expect(lines[1]).toBe(
+      `${itemId},${MARK}商品,PR4-MODEL,PR4-倉庫,8,PR4 テスト,2026-01-01 00:00:00`,
+    );
+  });
+
+  it('ids 空はヘッダのみの CSV(現行仕様)', async () => {
+    const res = await app.request('/api/items/csv', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', cookie },
+      body: JSON.stringify({ fileName: 'empty.csv' }),
+    });
+
+    const text = await res.text();
+    expect(text).toBe('﻿ID,商品名,型番,場所,在庫数,備考,登録日\n');
+  });
+
+  it('カンマを含む備考はクオートされる', async () => {
+    const [inserted] = await db
+      .insert(items)
+      .values({
+        productName: `${MARK}カンマ`,
+        modelNumber: 'C-1',
+        location: 'L-1',
+        inventoryItem: 1,
+        quantityChange: 0,
+        remarks: 'a,b "q"',
+        createdAt: '2026-01-02 03:04:05',
+        updatedAt: '2026-01-02 03:04:05',
+      })
+      .returning({ id: items.id });
+    if (!inserted) throw new Error('failed to insert');
+
+    const res = await app.request('/api/items/csv', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', cookie },
+      body: JSON.stringify({ ids: [inserted.id], fileName: 'q.csv' }),
+    });
+    const text = await res.text();
+    expect(text).toContain('"a,b ""q"""');
+    expect(text).toContain('2026-01-02 03:04:05');
+  });
+});

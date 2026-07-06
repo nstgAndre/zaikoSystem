@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ThreeDots as Loader } from 'react-loader-spinner';
 import { DangerButton } from '../components/DangerButton';
 import { Modal } from '../components/Modal';
+import { StorageRegister } from '../components/StorageRegister';
 import { useDownloadCsv } from '../features/DownloadCsv';
 import { useEditUpdate } from '../features/EditAndUpdate';
 import { useMasterCheckbox } from '../features/MasterCheckbox';
@@ -86,8 +87,14 @@ export function IndexPage() {
                   CSVダウンロード
                 </DangerButton>
               </div>
-              {/* StorageRegister(入庫記録モーダル)は PR5 で移植。state のみ現行踏襲 */}
-              {showRegisterModal && null}
+              <StorageRegister
+                isOpen={showRegisterModal}
+                onClose={() => {
+                  setShowRegisterModal(false);
+                  fetchData();
+                }}
+                fetchData={fetchData}
+              />
             </div>
 
             <div className="overflow-hidden shadow-sm sm:rounded-lg">

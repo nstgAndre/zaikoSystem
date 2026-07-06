@@ -5,9 +5,20 @@ import { IndexPage } from './Index';
 
 const mockGet = vi.hoisted(() => vi.fn());
 const mockPut = vi.hoisted(() => vi.fn());
+const mockCsvPost = vi.hoisted(() => vi.fn());
+const mockBulkPost = vi.hoisted(() => vi.fn());
 
 vi.mock('../lib/api-client', () => ({
-  api: { api: { items: { $get: mockGet, ':id': { $put: mockPut } } } },
+  api: {
+    api: {
+      items: {
+        $get: mockGet,
+        ':id': { $put: mockPut },
+        csv: { $post: mockCsvPost },
+        bulk: { $post: mockBulkPost },
+      },
+    },
+  },
 }));
 
 // レイアウト内の Link はルーターコンテキストが必要なため、テストではアンカーに差し替える
@@ -131,6 +142,18 @@ describe('IndexPage', () => {
         },
       });
     });
+  });
+
+  it('CSVダウンロードは選択0件だとリクエストせず画面も無反応(現行仕様)', async () => {
+    mockItems([item(1)]);
+    const user = userEvent.setup();
+    render(<IndexPage />);
+    await screen.findByText('商品1');
+
+    await user.click(screen.getByRole('button', { name: 'CSVダウンロード' }));
+
+    expect(mockCsvPost).not.toHaveBeenCalled();
+    expect(screen.queryByText(/エラー/)).not.toBeInTheDocument();
   });
 
   it('取得エラー時は画面にエラーを表示しない(現行仕様の忠実再現)', async () => {
