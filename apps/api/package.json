@@ -9,9 +9,12 @@
   },
   "dependencies": {
     "@zaiko/shared": "workspace:*",
+    "drizzle-orm": "^0.45.2",
     "hono": "^4.12.27"
   },
   "devDependencies": {
-    "bun-types": "^1.3.14"
+    "bun-types": "^1.3.14",
+    "drizzle-kit": "^0.31.10",
+    "postgres": "^3.4.9"
   }
 }
