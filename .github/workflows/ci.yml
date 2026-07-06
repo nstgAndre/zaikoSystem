@@ -11,6 +11,22 @@ permissions:
 jobs:
   check:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: sample
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U user -d sample"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgres://user:password@localhost:5432/sample
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
@@ -26,6 +42,10 @@ jobs:
 
       - name: Typecheck
         run: bun run typecheck
+
+      - name: Create business tables (drizzle-kit push)
+        working-directory: apps/api
+        run: bunx drizzle-kit push --force
 
       - name: Test (api)
         working-directory: apps/api
