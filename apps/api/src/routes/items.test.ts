@@ -255,10 +255,23 @@ describe('POST /api/items/csv', () => {
     expect(lines[0]).toBe('ID,商品名,型番,場所,在庫数,備考,登録日');
     expect(lines.length).toBe(2);
     // 先行テストの副作用に依存しないよう、期待値は DB の現在値から動的に組み立てる
+    // (クオート規則は PHP fputcsv 互換: スペース等を含むフィールドは "" で囲む)
+    const q = (v: string | number | null) => {
+      const str = v === null ? '' : String(v);
+      return /[", \t\n\r\\]/.test(str) ? `"${str.replaceAll('"', '""')}"` : str;
+    };
     const [current] = await db.select().from(items).where(eq(items.id, itemId));
     if (!current) throw new Error('test item missing');
     expect(lines[1]).toBe(
-      `${itemId},${current.productName},${current.modelNumber},${current.location},${current.inventoryItem},${current.remarks},2026-01-01 00:00:00`,
+      [
+        itemId,
+        q(current.productName),
+        q(current.modelNumber),
+        q(current.location),
+        current.inventoryItem,
+        q(current.remarks),
+        q('2026-01-01 00:00:00'),
+      ].join(','),
     );
   });
 
