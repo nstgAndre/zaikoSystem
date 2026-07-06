@@ -1,0 +1,17 @@
+{
+  "name": "@zaiko/api",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun run --watch src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@zaiko/shared": "workspace:*",
+    "hono": "^4.12.27"
+  },
+  "devDependencies": {
+    "bun-types": "^1.3.14"
+  }
+}
