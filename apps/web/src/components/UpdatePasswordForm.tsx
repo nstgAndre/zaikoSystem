@@ -68,6 +68,8 @@ export function UpdatePasswordForm({ className = '' }: { className?: string }) {
     setPassword('');
     setPasswordConfirmation('');
     setRecentlySuccessful(true);
+    // Inertia useForm の recentlySuccessful は 2 秒で自動消去される。同挙動を再現
+    setTimeout(() => setRecentlySuccessful(false), 2000);
   };
 
   return (

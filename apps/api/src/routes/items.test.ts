@@ -254,8 +254,11 @@ describe('POST /api/items/csv', () => {
     const lines = text.slice(1).trimEnd().split('\n');
     expect(lines[0]).toBe('ID,商品名,型番,場所,在庫数,備考,登録日');
     expect(lines.length).toBe(2);
+    // 先行テストの副作用に依存しないよう、期待値は DB の現在値から動的に組み立てる
+    const [current] = await db.select().from(items).where(eq(items.id, itemId));
+    if (!current) throw new Error('test item missing');
     expect(lines[1]).toBe(
-      `${itemId},${MARK}商品,PR4-MODEL,PR4-倉庫,8,PR4 テスト,2026-01-01 00:00:00`,
+      `${itemId},${current.productName},${current.modelNumber},${current.location},${current.inventoryItem},${current.remarks},2026-01-01 00:00:00`,
     );
   });
 
