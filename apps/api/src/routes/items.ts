@@ -1,5 +1,5 @@
 import { zValidator } from '@hono/zod-validator';
-import { count, eq } from 'drizzle-orm';
+import { count, eq, inArray } from 'drizzle-orm';
 import { Hono } from 'hono';
 import { z } from 'zod';
 import { db } from '../db';
@@ -44,6 +44,16 @@ const listQuerySchema = z.object({
   per_page: z.coerce.number().int().positive().optional(),
   page: z.coerce.number().int().positive().optional(),
 });
+
+/** CSV フィールドの RFC4180 風クオート(league/csv 互換)。 */
+const csvField = (value: string | number | null): string => {
+  const s = value === null ? '' : String(value);
+  return /[",\n\r]/.test(s) ? `"${s.replaceAll('"', '""')}"` : s;
+};
+
+/** CSV の登録日は Laravel(Carbon の __toString)と同じ 'YYYY-MM-DD HH:mm:ss'。 */
+const toCsvTimestamp = (value: string | null): string =>
+  value === null ? '' : value.replace('T', ' ').slice(0, 19);
 
 const updateSchema = z.object({
   productName: z.preprocess(emptyToNull, z.string()),
@@ -91,6 +101,69 @@ export const itemRoutes = new Hono<AuthEnv>()
       });
     },
   )
+  .post('/bulk', async (c) => {
+    // 現行 insItemBulk の忠実移植: バリデーションなし・stock_ins への記録なし・
+    // トランザクションなし(途中失敗で部分登録が残るのも現行仕様)。
+    // inventoryItem は文字列のまま届く(PostgreSQL のパラメータ変換に委ねる)
+    const body = (await c.req.json()) as {
+      items?: Array<{
+        productName: string;
+        modelNumber: string;
+        location: string;
+        inventoryItem: number | string;
+        remarks: string | null;
+      }>;
+    };
+    const bulkItems = body.items ?? [];
+    for (const itemData of bulkItems) {
+      const now = nowTimestamp();
+      await db.insert(items).values({
+        productName: itemData.productName,
+        modelNumber: itemData.modelNumber,
+        location: itemData.location,
+        inventoryItem: itemData.inventoryItem as number,
+        remarks: itemData.remarks,
+        createdAt: now,
+        updatedAt: now,
+      });
+    }
+    return c.json({ success: 'アイテムが正常に登録されました。' });
+  })
+  .post('/csv', async (c) => {
+    // 現行 csv アクションの忠実移植(migration-spec.md §3.2)。
+    // fileName は現行同様に未検証のまま Content-Disposition へ渡す(既知の課題として仕様書に記載済み)
+    const body = (await c.req.json()) as { ids?: Array<string | number>; fileName?: string };
+    const ids = (body.ids ?? []).map(Number);
+    const fileName = body.fileName ?? '';
+
+    const rows = ids.length > 0 ? await db.select().from(items).where(inArray(items.id, ids)) : [];
+
+    const header = ['ID', '商品名', '型番', '場所', '在庫数', '備考', '登録日'];
+    const lines = [
+      header.join(','),
+      ...rows.map((row) =>
+        [
+          csvField(row.id),
+          csvField(row.productName),
+          csvField(row.modelNumber),
+          csvField(row.location),
+          csvField(row.inventoryItem),
+          csvField(row.remarks),
+          csvField(toCsvTimestamp(row.createdAt)),
+        ].join(','),
+      ),
+    ];
+    const csv = `\uFEFF${lines.join('\n')}\n`;
+
+    // fetch 標準の Headers は非 ASCII を受け付けない(現行 Laravel は生 UTF-8 だが
+    // ランタイム制約で不可能)。フロントは download 属性のクライアント側ファイル名を
+    // 使うため実害はなく、RFC 6266 の filename* 形式でエンコードして返す
+    const encodedFileName = encodeURIComponent(fileName);
+    return c.body(csv, 200, {
+      'Content-Type': 'text/csv; charset=UTF-8',
+      'Content-Disposition': `attachment; filename="${encodedFileName}"; filename*=UTF-8''${encodedFileName}`,
+    });
+  })
   .put(
     '/:id',
     zValidator('json', updateSchema, (result, c) => {

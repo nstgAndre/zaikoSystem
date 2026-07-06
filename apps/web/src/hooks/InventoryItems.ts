@@ -21,6 +21,8 @@ export const useInventoryItemState = () => {
   const itemsPerPage = 3;
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [btnEditChangeColors, setBtnEditChangeColors] = useState<{ [key: string]: string }>({});
+  const [bulkData, setBulkData] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   return {
     items,
@@ -48,5 +50,9 @@ export const useInventoryItemState = () => {
     itemsPerPage,
     btnEditChangeColors,
     setBtnEditChangeColors,
+    bulkData,
+    setBulkData,
+    successMessage,
+    setSuccessMessage,
   };
 };
