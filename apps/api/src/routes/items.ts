@@ -45,10 +45,14 @@ const listQuerySchema = z.object({
   page: z.coerce.number().int().positive().optional(),
 });
 
-/** CSV フィールドの RFC4180 風クオート(league/csv 互換)。 */
+/**
+ * CSV フィールドのクオート(league/csv = PHP fputcsv 互換)。
+ * fputcsv はカンマ・引用符・改行に加えて空白(スペース/タブ)・バックスラッシュを
+ * 含むフィールドもクオートする(実コンテナの league/csv で確認済み)。
+ */
 const csvField = (value: string | number | null): string => {
   const s = value === null ? '' : String(value);
-  return /[",\n\r]/.test(s) ? `"${s.replaceAll('"', '""')}"` : s;
+  return /[", \t\n\r\\]/.test(s) ? `"${s.replaceAll('"', '""')}"` : s;
 };
 
 /** CSV の登録日は Laravel(Carbon の __toString)と同じ 'YYYY-MM-DD HH:mm:ss'。 */

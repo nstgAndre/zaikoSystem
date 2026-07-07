@@ -10,7 +10,7 @@ const apiProxyTarget = process.env.VITE_API_URL ?? 'http://localhost:3000';
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
-    // Laravel 側の Vite(5173)と並走できるようポートをずらす
+    // dev サーバのポート(移行期の旧 Laravel Vite=5173 との衝突回避に由来)
     port: 5174,
     proxy: {
       '/api': apiProxyTarget,
