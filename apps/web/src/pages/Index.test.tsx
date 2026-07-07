@@ -156,6 +156,36 @@ describe('IndexPage', () => {
     expect(screen.queryByText(/エラー/)).not.toBeInTheDocument();
   });
 
+  it('ロード中はスピナーを表示しテーブルを出さない(§7.2)', async () => {
+    let resolve: (v: unknown) => void = () => {};
+    mockGet.mockReturnValue(
+      new Promise((r) => {
+        resolve = r;
+      }),
+    );
+    const { container } = render(<IndexPage />);
+
+    expect(container.querySelector('svg')).not.toBeNull();
+    expect(container.querySelector('table')).toBeNull();
+    resolve({
+      status: 200,
+      ok: true,
+      json: async () => ({ current_page: 1, data: [], last_page: 1, per_page: 100, total: 0 }),
+    });
+  });
+
+  it('ブラウザバックを無効化する(popstate で pushState し直す・§7.2)', async () => {
+    mockItems([item(1)]);
+    const pushSpy = vi.spyOn(window.history, 'pushState');
+    render(<IndexPage />);
+    await screen.findByText('商品1');
+
+    const before = pushSpy.mock.calls.length;
+    window.dispatchEvent(new PopStateEvent('popstate'));
+    expect(pushSpy.mock.calls.length).toBeGreaterThan(before);
+    pushSpy.mockRestore();
+  });
+
   it('取得エラー時は画面にエラーを表示しない(現行仕様の忠実再現)', async () => {
     mockGet.mockRejectedValue(new Error('network down'));
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});

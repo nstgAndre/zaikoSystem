@@ -462,3 +462,32 @@ stock_ins と同構造(`inItem` → `outItem`、出庫ID/出庫数量)。item_id
 (実コンテナの league/csv で確認)。新実装を同規則に修正した結果、バイト一致に到達した。
 
 以上により §1.3 の移植方針(現行挙動の忠実再現)を満たしたと判断し、旧 Laravel(src/・docker/php・docker/web・ルート index.php/index.html)を撤去した。
+
+### 8.1 追補記録(PR6 レビュー指摘対応・2026-07-07)
+
+§8 の初回記録でカバーされていなかった §7 項目の検証結果。旧システムは撤去済みのため、
+追補分は **新実装の実測・自動テスト + 各 PR の仕様準拠レビュー(旧コードとの突き合わせ)** で担保する。
+
+| 項目 | 結果 | 根拠 |
+|---|---|---|
+| §7.1 未認証リダイレクト | ✅ /index・/profile とも未認証は `/` へ | router beforeLoad + PR3 E2E 実測 |
+| §7.1 レートリミット | ➖ Better Auth 既定に委任(§5 決定: 現行5回ロックとの完全一致は求めない) | 設計判断の記録 |
+| §7.1 ログアウト後の API 401 | ✅ セッションなしの /api/items 系は全 401(下記 §7.9 実測) | curl 実測 |
+| §7.1 /login 不存在 | ✅ API 404 実測。SPA はルート未定義(/・/index・/profile のみ) | curl + router.tsx |
+| §7.2 ロード中スピナー | ✅ | web テスト(Index.test) |
+| §7.2 取得エラー非表示(⚠️G=忠実再現) | ✅ console.error のみ・画面無反応 | web テスト |
+| §7.2 ブラウザバック無効化 | ✅ popstate で pushState し直す | web テスト |
+| §7.2 検索でページ先頭リセット | ✅ | web テスト |
+| §7.3 数量0編集(レコード非増加) / 在庫不足200 / 空必須422 / 存在しないid=500 / 文字列"0" | ✅ | api テスト(items.test)+ PR4 仕様準拠レビューで旧 ItemController と突き合わせ済み |
+| §7.3 数量変更空→0送信 / 列数変化の非対称 | ✅ | web テスト |
+| §7.4 成功メッセージ / 失敗時無反応 / 送信ペイロード(文字列 inventoryItem) | ✅ | web テスト(StorageRegister.test)+ §8 実測(新登録→旧表示) |
+| §7.4 モーダル閉じで一覧再取得 | ✅ | 実装(Index.tsx onClose)+ PR5 E2E |
+| §7.7 ロゴ・在庫一覧リンク(/index)・ユーザー名ドロップダウン・Profile/Log Out | ✅ | web テスト(AuthenticatedLayout.test)+ PR3/PR5 E2E(実遷移) |
+| §7.7 モバイルメニュー(ユーザー名・メール・Profile・Log Out・⚠️D=Dashboard デッドリンク維持) | ✅ | web テスト |
+| §7.9 未認証 401 | ✅ GET/PUT/POST bulk/POST csv 全 401 | curl 実測 |
+| §7.9 対象外パス 404 | ✅ /test /register /forgot-password /items/createTest /items /login /dashboard /DeliverRegister すべて 404 | curl 実測 |
+| §7.9 POST /api/items/update | ✅ 未認証 401、認証後はルート未定義で 404(コード上ハンドラ不存在) | curl 実測 + items.ts |
+| §7.9 GET /items 公開版(⚠️A) | ✅ 存在しない(/api/items のみ・認証必須) | curl 実測 |
+
+あわせて、旧 Laravel/PHP 前提の IDE 設定(.idea/php.xml・phpunit.xml・iml 内の src/vendor 参照)を
+削除し、workspace.xml は追跡対象から外した(Issue #43 完了条件「PHP/Laravel/Inertia の消滅」対応)。
